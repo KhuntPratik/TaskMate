@@ -1,0 +1,197 @@
+/* properties */
+.container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: 'Inter', sans-serif;
+
+    /* Ensure we cover the global background completely */
+    /* Container local logic */
+    width: 100%;
+}
+
+/* Sidebar REMOVED */
+
+/* Main Content */
+.main {
+    flex: 1;
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    overflow-y: auto;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid #000;
+    padding-bottom: 1.5rem;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1.5px;
+    line-height: 1;
+}
+
+.date {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+/* Stats Row */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.statCard {
+    border: 1px solid #e0e0e0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: white;
+}
+
+.statValue {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.statLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+}
+
+/* Task Section */
+.taskSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.addTaskWrapper {
+    display: flex;
+    gap: 0;
+    /* Connected inputs */
+    margin-bottom: 1rem;
+}
+
+.input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 1px solid #000;
+    background: white;
+    font-size: 1rem;
+    outline: none;
+    border-right: none;
+}
+
+.input:focus {
+    background: #fafafa;
+}
+
+.addButton {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+    padding: 0 2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: background-color 0.2s;
+}
+
+.addButton:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+.taskList {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #e0e0e0;
+}
+
+.taskItem {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    gap: 1rem;
+    transition: background-color 0.2s;
+}
+
+.checkbox {
+    width: 22px;
+    height: 22px;
+    border: 1px solid #000000;
+    border-radius: 0;
+    /* Square for simple look */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.checkboxChecked {
+    background-color: #000000;
+}
+
+.checkbox::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: white;
+    display: none;
+}
+
+.checkboxChecked::after {
+    display: block;
+}
+
+.taskText {
+    flex: 1;
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: #000;
+}
+
+.taskCompleted {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.deleteButton {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.deleteButton:hover {
+    color: #f44336;
+    /* Only subtle color for destructive action? Or keep black? */
+    color: #000;
+}
