@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model projects {
+  projectid   Int         @id @default(autoincrement())
+  projectname String      @db.VarChar(100)
+  description String?     @db.VarChar(255)
+  createdby   Int?
+  createdat   DateTime?   @default(now()) @db.Timestamp(6)
+  tasklists   tasklists[]
+}
+
+model roles {
+  roleid   Int     @id @default(autoincrement())
+  rolename String  @unique @db.VarChar(50)
+  users    users[]
+}
+
+model taskcomments {
+  commentid   Int       @id @default(autoincrement())
+  taskid      Int?
+  userid      Int?
+  commenttext String    @db.VarChar(255)
+  createdat   DateTime? @default(now()) @db.Timestamp(6)
+  tasks       tasks?    @relation(fields: [taskid], references: [taskid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model taskhistory {
+  historyid  Int       @id @default(autoincrement())
+  taskid     Int?
+  changedby  Int?
+  changetype String    @db.VarChar(50)
+  changetime DateTime? @default(now()) @db.Timestamp(6)
+  tasks      tasks?    @relation(fields: [taskid], references: [taskid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model tasklists {
+  listid    Int       @id @default(autoincrement())
+  projectid Int?
+  listname  String    @db.VarChar(100)
+  projects  projects? @relation(fields: [projectid], references: [projectid], onDelete: Cascade, onUpdate: NoAction)
+  tasks     tasks[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tasks {
+  taskid       Int            @id @default(autoincrement())
+  listid       Int?
+  assignedto   Int?
+  title        String         @db.VarChar(100)
+  description  String?        @db.VarChar(255)
+  priority     String?        @db.VarChar(10)
+  status       String?        @db.VarChar(20)
+  duedate      DateTime?      @db.Date
+  createdat    DateTime?      @default(now()) @db.Timestamp(6)
+  taskcomments taskcomments[]
+  taskhistory  taskhistory[]
+  tasklists    tasklists?     @relation(fields: [listid], references: [listid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  userid       Int       @id @default(autoincrement())
+  username     String    @unique @db.VarChar(50)
+  email        String    @unique @db.VarChar(100)
+  passwordhash String    @db.VarChar(255)
+  createdat    DateTime? @default(now()) @db.Timestamp(6)
+  roleid       Int?
+  roles        roles?    @relation(fields: [roleid], references: [roleid], onUpdate: NoAction)
+}

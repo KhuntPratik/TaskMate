@@ -1,0 +1,65 @@
+.sidebar {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.03);
+    /* ultra-light glass */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid var(--glass-border);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    z-index: 10;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+.logo {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 3rem;
+    letter-spacing: -0.5px;
+    background: linear-gradient(to right, #818cf8, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.navItem {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid transparent;
+}
+
+.navItem:hover {
+    background: var(--surface-hover);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.navItemActive {
+    background: var(--surface-active);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navItemActive .icon {
+    color: var(--primary);
+}

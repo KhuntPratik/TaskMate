@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    background: transparent;
+    /* Changed from white to transparent to show global background */
+    color: var(--foreground);
+    position: relative;
+    z-index: 1;
+}
+
+.mainContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    /* Added padding for better spacing */
+}
