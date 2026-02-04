@@ -1,15 +1,20 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const router = useRouter(); // Initialize router
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    login(email, password);
+    const success = await login(email, password);
+    if (success) {
+      router.push('/Home'); 
+    }
   };
 
   return (

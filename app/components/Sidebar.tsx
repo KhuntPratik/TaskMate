@@ -2,15 +2,36 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import styles from './Sidebar.module.css';
+import { PanelLeftClose } from 'lucide-react';
 
-export default function Sidebar() {
+interface SidebarProps {
+    onClose?: () => void;
+}
+
+export default function Sidebar({ onClose }: SidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
     const { isAuthenticated } = useAuth();
 
     return (
         <aside className={styles.sidebar}>
-            <div className={styles.logo}>TaskMate</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+                <div className={styles.logo} style={{ marginBottom: 0 }}>TaskMate</div>
+                <button
+                    onClick={onClose}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'rgba(255,255,255,0.5)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <PanelLeftClose size={24} />
+                </button>
+            </div>
             <nav className={styles.nav}>
                 {isAuthenticated ? (
                     <>
@@ -20,6 +41,14 @@ export default function Sidebar() {
                         >
                             Dashboard
                         </div>
+
+                        <div
+                            className={`${styles.navItem} ${pathname === '/Project' ? styles.navItemActive : ''}`}
+                            onClick={() => router.push('/Project')}
+                        >
+                            Project
+                        </div>
+
                         <div
                             className={`${styles.navItem} ${pathname === '/MyTask' ? styles.navItemActive : ''}`}
                             onClick={() => router.push('/MyTask')}

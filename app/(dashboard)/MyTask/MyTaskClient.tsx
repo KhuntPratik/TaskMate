@@ -2,24 +2,64 @@
 
 import { useState } from 'react';
 import ProtectedRoute from '../../components/ProtectedRoute';
- import KanbanBoard, { Task } from './KanbanBoard';
+import KanbanBoard, { Task } from './KanbanBoard';
 import styles from './mytask.module.css';
+import { useRouter } from 'next/navigation';
+import { Edit, Trash2, Search } from 'lucide-react';
+
+
+export interface ProjectSummary {
+    projectid: number;
+    projectname: string;
+}
 
 interface Props {
     tasks: Task[];
+    projects: ProjectSummary[];
 }
 
-export default function MyTaskClient({ tasks }: Props) {
+export default function MyTaskClient({ tasks, projects }: Props) {
     const [taskState, setTaskState] = useState<Task[]>(tasks);
     const [filter, setFilter] = useState<'All' | 'Pending' | 'Completed'>('All');
+    const [projectFilter, setProjectFilter] = useState<number | 'All'>('All');
     const [viewMode, setViewMode] = useState<'list' | 'board'>('board');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const filteredTasks = taskState.filter(task => {
-        if (filter === 'All') return true;
-        if (filter === 'Pending') return task.status !== 'Done';
-        if (filter === 'Completed') return task.status === 'Done';
-        return true;
+        // Status Filter
+        const statusMatch = filter === 'All'
+            ? true
+            : filter === 'Pending'
+                ? task.status !== 'Completed'
+                : task.status === 'Completed';
+
+        // Project Filter
+        const projectMatch = projectFilter === 'All' || task.projectId === projectFilter;
+
+        // Search Filter
+        const searchMatch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+        return statusMatch && projectMatch && searchMatch;
     });
+
+    const router = useRouter()
+
+    const handleDelete = async (taskId: number) => {
+        if (!confirm("Are you sure you want to delete this task?")) return;
+
+        try {
+            const res = await fetch(`/api/task/${taskId}`, {
+                method: 'DELETE',
+            });
+
+            if (!res.ok) throw new Error("Failed to delete task");
+
+            setTaskState(prev => prev.filter(t => t.id !== taskId));
+        } catch (error) {
+            console.error("Delete failed:", error);
+            alert("Failed to delete task");
+        }
+    };
 
     return (
         <ProtectedRoute>
@@ -28,7 +68,32 @@ export default function MyTaskClient({ tasks }: Props) {
                     <header className={styles.header}>
                         <h1 className={styles.title}>My Tasks</h1>
 
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            {/* Search Bar */}
+                            <div className={styles.searchContainer}>
+                                <Search size={18} className={styles.searchIcon} />
+                                <input
+                                    type="text"
+                                    placeholder="Search tasks..."
+                                    className={styles.searchInput}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
+
+                            {/* Project Filter Dropdown */}
+                            <select
+                                className={styles.viewToggle} // Reusing viewToggle style for basic shape, or add new style
+                                style={{ padding: '0.5rem', outline: 'none', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px' }}
+                                value={projectFilter}
+                                onChange={(e) => setProjectFilter(e.target.value === 'All' ? 'All' : Number(e.target.value))}
+                            >
+                                <option value="All" style={{ color: 'black' }}>All Projects</option>
+                                {projects.map(p => (
+                                    <option key={p.projectid} value={p.projectid} style={{ color: 'black' }}>{p.projectname}</option>
+                                ))}
+                            </select>
+
                             {/* View Toggle */}
                             <div className={styles.viewToggle}>
                                 <button
@@ -44,12 +109,12 @@ export default function MyTaskClient({ tasks }: Props) {
                                     Board
                                 </button>
                             </div>
-                            <button className={styles.newTaskBtn}>+ NEW TASK</button>
+                            <button className={styles.newTaskBtn} onClick={() => { router.push('/MyTask/AddTask') }}>+ NEW TASK</button>
                         </div>
                     </header>
 
                     {viewMode === 'board' ? (
-                        <KanbanBoard tasks={taskState} setTasks={setTaskState} />
+                        <KanbanBoard tasks={filteredTasks} setTasks={setTaskState} />
                     ) : (
                         <>
                             {/* Filter Tabs */}
@@ -83,12 +148,13 @@ export default function MyTaskClient({ tasks }: Props) {
                                         <th className={styles.tableHeader}>Status</th>
                                         <th className={styles.tableHeader}>Due Date</th>
                                         <th className={styles.tableHeader}>Category</th>
+                                        <th className={styles.tableHeader}>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filteredTasks.map(task => (
                                         <tr key={task.id} className={styles.tableRow}>
-                                            <td className={`${styles.tableCell} ${task.status === 'Done' ? styles.statusDone : styles.statusPending} ${styles.statusIndicator}`}>
+                                            <td className={`${styles.tableCell} ${task.status === 'Completed' ? styles.statusDone : styles.statusPending} ${styles.statusIndicator}`}>
                                                 {task.title}
                                             </td>
                                             <td className={styles.tableCell}>
@@ -103,10 +169,10 @@ export default function MyTaskClient({ tasks }: Props) {
                                                 <span style={{
                                                     padding: '4px 8px',
                                                     borderRadius: '6px',
-                                                    background: task.status === 'Done' ? 'rgba(16, 185, 129, 0.2)' :
+                                                    background: task.status === 'Completed' ? 'rgba(16, 185, 129, 0.2)' :
                                                         task.status === 'In Progress' ? 'rgba(99, 102, 241, 0.2)' :
                                                             'rgba(148, 163, 184, 0.2)',
-                                                    color: task.status === 'Done' ? '#34d399' :
+                                                    color: task.status === 'Completed' ? '#34d399' :
                                                         task.status === 'In Progress' ? '#818cf8' :
                                                             '#cbd5e1',
                                                     fontSize: '0.85rem'
@@ -116,6 +182,22 @@ export default function MyTaskClient({ tasks }: Props) {
                                             </td>
                                             <td className={styles.tableCell} style={{ opacity: 0.7 }}>{task.dueDate}</td>
                                             <td className={styles.tableCell} style={{ opacity: 0.7 }}>{task.category}</td>
+                                            <td className={styles.tableCell}>
+                                                <button
+                                                    style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.7, marginRight: '8px' }}
+                                                    onClick={() => router.push(`/MyTask/${task.id}/edit`)}
+                                                    title="Edit"
+                                                >
+                                                    <Edit size={16} />
+                                                </button>
+                                                <button
+                                                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', opacity: 0.7 }}
+                                                    onClick={() => handleDelete(task.id)}
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

@@ -1,38 +1,64 @@
-// import { prisma } from "../../../lib/prisma";
-// import { NextResponse } from "next/server";
-// import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
+import { prisma } from "../../../lib/prisma";
+import bcrypt from "bcryptjs";
+import { signToken } from "../../../lib/jwt";
 
-// const JWT_SECRET = process.env.JWT_SECRET || "SUPER_SECRET_KEY";
+export async function POST(req: Request) {
+  try {
+    const { email, password } = await req.json();
 
-// export async function POST(req: Request) {
-//   const { email, password } = await req.json();
+    if (!email || !password) {
+      return NextResponse.json(
+        { message: "Email and password are required" },
+        { status: 400 }
+      );
+    }
 
-//   const user = await prisma.users.findUnique({
-//     where: { email },
-//   });
+    const user = await prisma.users.findUnique({
+      where: { email },
+      include: { roles: true }
+    });
 
-//   if (!user || user.passwordhash !== password) {
-//     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-//   }
+    if (!user) {
+      return NextResponse.json(
+        { message: "Invalid credentials" },
+        { status: 401 }
+      );
+    }
 
-//   const token = jwt.sign(
-//     { id: user.userid, email: user.email },
-//     JWT_SECRET,
-//     { expiresIn: "1d" }
-//   );
+    const isMatch = await bcrypt.compare(password, user.passwordhash);
 
-//   const response = NextResponse.json({
-//     id: user.userid,
-//     email: user.email,
-//   });
+    if (!isMatch) {
+      return NextResponse.json(
+        { message: "Invalid credentials" },
+        { status: 401 }
+      );
+    }
 
-//   response.cookies.set("token", token, {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === "production",
-//     sameSite: "strict",
-//     maxAge: 60 * 60 * 24, // 1 day
-//     path: "/",
-//   });
+    const userRole = user.roles ? user.roles.rolename : "User";
 
-//   return response;
-// }
+    const token = signToken({
+      userid: user.userid,
+      email: user.email,
+      role: userRole
+    });
+
+    return NextResponse.json({
+      message: "Login successful",
+      token,
+      user: {
+        userid: user.userid,
+        email: user.email,
+        role: userRole
+      }
+    });
+
+  } catch (error: any) {
+    console.error("LOGIN ERROR:", error);
+    return NextResponse.json(
+      { message: "Server error", error: error.message },
+      { status: 500 }
+    );
+  }
+}
+

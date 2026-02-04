@@ -12,6 +12,7 @@ import {
     Briefcase,
     Users
 } from 'lucide-react';
+import Link from 'next/link';
 import styles from './home.module.css';
 import ProtectedRoute from '../../components/ProtectedRoute';
 
@@ -51,10 +52,12 @@ export default function HomePage() {
                         <h1 className="gradient-text">Welcome back, Pratik</h1>
                         <p className={styles.date}>{currentDate} • You have {stats.pending} pending tasks today</p>
                     </div>
-                    <button className={styles.actionButton}>
-                        <Plus size={20} />
-                        <span>Create New</span>
-                    </button>
+                    <Link href="/Home/AddTask">
+                        <button className={styles.actionButton}>
+                            <Plus size={20} />
+                            <span>Create New</span>
+                        </button>
+                    </Link>
                 </header>
 
                 {/* Stats Grid */}
@@ -116,7 +119,7 @@ export default function HomePage() {
                 <div className={`${styles.contentGrid} animate-slide-up stagger-2`}>
 
                     {/* Recent Tasks */}
-                    <section className="glass-panel" style={{ padding: '2rem' }}>
+                    <section className="glass-panel" style={{ margin: '10px' }}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionTitle}>
                                 <Briefcase size={22} className="text-primary" />

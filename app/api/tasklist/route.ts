@@ -3,9 +3,9 @@ import { prisma } from "../../../lib/prisma";
 
 export async function GET() {
   try {
-    const users = await prisma.users.findMany();
+    const tasklists = await prisma.tasklists.findMany();
 
-    return NextResponse.json(users);
+    return NextResponse.json(tasklists);
 
   } catch (error) {
     console.error(error);
@@ -17,17 +17,17 @@ export async function GET() {
 }
 
 
-export async function POST(req) {
+export async function POST(req: Request) {
 
   try {
     const body = await req.json();
 
-    const { userName, email, passwordHash, roleId } = body;
+    const { ListID, ProjectID, ListName } = body;
 
-    const user = await prisma.users.create({
+    const tasklist = await prisma.tasklists.create({
       data: {
-        userName: userName,
-        email: email,
+        listid: ListID,
+        projectid: ProjectID,
         listname: ListName
       }
     })
