@@ -12,7 +12,6 @@ export default function RegisterPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate auth
         setTimeout(() => {
             // login();
             setLoading(false);

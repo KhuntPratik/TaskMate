@@ -4,7 +4,7 @@
   --secondary-hue: 330;
   --success-hue: 150;
 
-  --background: #0f172a;
+  --background: #02020282;
   --foreground: #f8fafc;
 
   --primary: hsl(var(--primary-hue), 80%, 65%);

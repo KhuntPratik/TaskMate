@@ -2,10 +2,11 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,10 +19,27 @@ export default function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Login</button>
-    </form>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Login</button>
+      </form>
+
+      <hr />
+
+      {/* ✅ Google Login Button */}
+      <button onClick={() => signIn("google")}>
+        Login with Google (Calendar Access)
+      </button>
+    </div>
   );
 }
