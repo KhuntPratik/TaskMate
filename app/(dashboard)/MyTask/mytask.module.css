@@ -24,7 +24,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 1.5rem;
 }
 
@@ -33,15 +33,15 @@
     font-weight: 800;
     margin: 0;
     letter-spacing: -1px;
-    background: linear-gradient(to right, #fff, #cbd5e1);
+    background: linear-gradient(to right, var(--foreground), #475569);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
 }
 
 .newTaskBtn {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: #fff;
+    background: var(--primary);
+    color: white;
     border: none;
     padding: 0.8rem 1.5rem;
     font-weight: 600;
@@ -49,13 +49,13 @@
     cursor: pointer;
     transition: all 0.3s;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: var(--shadow-sm);
 }
 
 .newTaskBtn:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+    box-shadow: var(--shadow-md);
 }
 
 /* Search Bar */
@@ -68,16 +68,16 @@
 .searchIcon {
     position: absolute;
     left: 12px;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--muted-foreground);
     pointer-events: none;
 }
 
 .searchInput {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
+    background: #ffffff;
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 0.6rem 1rem 0.6rem 2.5rem;
-    color: white;
+    color: var(--foreground);
     font-size: 0.9rem;
     outline: none;
     transition: all 0.2s;
@@ -85,39 +85,39 @@
 }
 
 .searchInput::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--muted-foreground);
 }
 
 .searchInput:focus {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: #ffffff;
+    border-color: var(--primary);
     width: 240px;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
 /* Filters */
 .filters {
     display: flex;
     gap: 2rem;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .filterTab {
     padding: 0.75rem 0;
     cursor: pointer;
     font-weight: 500;
-    color: #94a3b8;
+    color: var(--muted-foreground);
     position: relative;
     font-size: 1rem;
     transition: color 0.2s;
 }
 
 .filterTab:hover {
-    color: #fff;
+    color: var(--foreground);
 }
 
 .filterActive {
-    color: #fff;
+    color: var(--foreground);
     font-weight: 700;
 }
 
@@ -130,7 +130,6 @@
     height: 3px;
     background: var(--primary);
     border-radius: 3px 3px 0 0;
-    box-shadow: 0 0 10px var(--primary);
 }
 
 /* Task List Table */
@@ -138,29 +137,29 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 0.5rem;
-    /* Space between rows */
 }
 
 .tableHeader {
     text-align: left;
     font-weight: 600;
-    color: #94a3b8;
+    color: var(--muted-foreground);
     font-size: 0.85rem;
     text-transform: uppercase;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .tableRow {
     transition: transform 0.2s, background 0.2s;
-    background: var(--glass-bg);
-    /* Glass cards for rows */
-    backdrop-filter: blur(5px);
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
 }
 
 .tableRow:hover {
     background: var(--surface-hover);
-    transform: scale(1.01);
+    transform: scale(1.005);
+    box-shadow: var(--shadow-md);
 }
 
 /* Rounded corners for rows */
@@ -177,7 +176,7 @@
 .tableCell {
     padding: 1.25rem 1rem;
     font-size: 0.95rem;
-    color: #e2e8f0;
+    color: var(--foreground);
     border-bottom: 1px solid transparent;
 }
 
@@ -192,21 +191,21 @@
 }
 
 .badgeHigh {
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: var(--color-light-rose);
+    color: #be123c;
+    border: 1px solid #fecdd3;
 }
 
 .badgeMedium {
-    background: rgba(245, 158, 11, 0.2);
-    color: #fcd34d;
-    border: 1px solid rgba(245, 158, 11, 0.4);
+    background: var(--color-light-orange);
+    color: #c2410c;
+    border: 1px solid #fed7aa;
 }
 
 .badgeLow {
-    background: rgba(59, 130, 246, 0.2);
-    color: #93c5fd;
-    border: 1px solid rgba(59, 130, 246, 0.4);
+    background: var(--color-light-blue);
+    color: #0369a1;
+    border: 1px solid #bae6fd;
 }
 
 .statusIndicator::before {
@@ -215,30 +214,29 @@
 }
 
 .statusDone {
-    color: #10b981;
+    color: #059669;
     text-decoration: line-through;
     opacity: 0.7;
 }
 
-/* ... existing styles ... */
 .statusPending {
-    color: #fbbf24;
+    color: #d97706;
 }
 
-/* View Toggle */
+
 .viewToggle {
     display: flex;
-    background: rgba(255, 255, 255, 0.05);
+    background: #ffffff;
     border-radius: 12px;
     padding: 4px;
     margin-right: 1rem;
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--border-color);
 }
 
 .viewBtn {
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--muted-foreground);
     padding: 6px 16px;
     border-radius: 8px;
     cursor: pointer;
@@ -248,14 +246,19 @@
 }
 
 .viewBtn:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--foreground);
+    background: var(--surface-hover);
 }
 
 .activeViewBtn {
     background: var(--primary);
     color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-sm);
+}
+
+.activeViewBtn:hover {
+    background: var(--primary);
+    color: white;
 }
 
 /* Kanban Board */
@@ -268,7 +271,7 @@
     padding-right: 1rem;
     /* Custom Scrollbar for container */
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
 }
 
 .boardContainer::-webkit-scrollbar {
@@ -280,7 +283,7 @@
 }
 
 .boardContainer::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.1);
     border-radius: 20px;
 }
 
@@ -288,28 +291,27 @@
     flex: 1;
     min-width: 320px;
     max-width: 380px;
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     max-height: 100%;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-md);
     transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .column:hover {
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary);
 }
 
 .columnHeader {
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+    background: var(--surface-hover);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
@@ -317,7 +319,7 @@
 .columnTitle {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #e2e8f0;
+    color: var(--foreground);
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -331,21 +333,17 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    box-shadow: 0 0 10px currentColor;
+    box-shadow: 0 0 5px currentColor;
 }
 
-/* Specific Column Colors via helper classes or nth-child logic if dynamic classes aren't passed */
-/* We will prefer passing a class in TSX, but for now we can infer order or use specific logic if strictly 3 columns */
-/* Ideally, we update TSX to add a className for status. */
-
 .columnCount {
-    background: rgba(255, 255, 255, 0.1);
+    background: #ffffff;
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.8);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    color: var(--foreground);
+    border: 1px solid var(--border-color);
 }
 
 .taskList {
@@ -358,7 +356,7 @@
     min-height: 150px;
     /* Custom Scrollbar for list */
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
 }
 
 .taskList::-webkit-scrollbar {
@@ -366,35 +364,35 @@
 }
 
 .taskList::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
 /* Task Card */
 .taskCard {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #ffffff;
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1.25rem;
     cursor: grab;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
 }
 
 .taskCard:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--surface-hover);
+    border-color: var(--primary);
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-md);
 }
 
 .draggingCard {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-xl);
     transform: scale(1.03) rotate(1deg);
     border-color: var(--primary);
-    background: rgba(30, 41, 59, 0.9);
+    background: #ffffff;
     z-index: 100;
 }
 
@@ -410,7 +408,7 @@
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.5;
-    color: #f1f5f9;
+    color: var(--foreground);
     padding-right: 30px;
     /* Space for actions */
 }
@@ -440,15 +438,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--muted-foreground);
+    background: var(--surface-active);
 }
 
 .editBtn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white !important;
+    background: var(--color-light-blue);
+    color: #0369a1 !important;
 }
 
 .deleteBtn:hover {
-    background: rgba(239, 68, 68, 0.2) !important;
+    background: var(--color-light-rose) !important;
+    color: #be123c !important;
     transform: scale(1.1);
 }
 
@@ -458,7 +459,7 @@
     justify-content: space-between;
     margin-top: 0.5rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--border-color);
 }
 
 .cardMeta {
@@ -466,7 +467,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--muted-foreground);
 }
 
 /* Priority Badges - Refined */

@@ -1,12 +1,11 @@
 'use client';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { Edit, Trash2 } from 'lucide-react';
 import styles from './mytask.module.css';
 import ProtectedRoute from '../../components/ProtectedRoute';
 
-// Define the Task interface here if it's not exported from page.tsx, 
-// OR import it if we export it. For now, I'll duplicate it to be safe and autonomous.
 export interface Task {
     id: number;
     title: string;
@@ -31,6 +30,15 @@ const COLUMNS = [
 
 export default function KanbanBoard({ tasks, setTasks }: KanbanBoardProps) {
     const router = useRouter();
+    const [enabled, setEnabled] = useState(false);
+
+    useEffect(() => {
+        const animation = requestAnimationFrame(() => setEnabled(true));
+        return () => {
+            cancelAnimationFrame(animation);
+            setEnabled(false);
+        };
+    }, []);
 
     const onDragEnd = (result: DropResult) => {
         const { source, destination, draggableId } = result;
@@ -44,34 +52,42 @@ export default function KanbanBoard({ tasks, setTasks }: KanbanBoardProps) {
             return;
         }
 
-        const movedTaskFn = tasks.find(t => t.id.toString() === draggableId);
-        if (!movedTaskFn) return;
-
         // Create a new array to maintain immutability
         const newTasks = Array.from(tasks);
+        const movedTaskFn = newTasks.find(t => t.id.toString() === draggableId);
 
-        // If moving to a different column, update status
+        if (!movedTaskFn) return;
+
+        // If moving to a different column
         if (source.droppableId !== destination.droppableId) {
             const newStatus = destination.droppableId as Task['status'];
-            const updatedTask = { ...movedTaskFn, status: newStatus };
-            const updatedTasks = newTasks.map(t => t.id === updatedTask.id ? updatedTask : t);
+
+            // Update the local state immediately (Optimistic UI)
+            const updatedTasks = newTasks.map(t =>
+                t.id.toString() === draggableId ? { ...t, status: newStatus } : t
+            );
+
             setTasks(updatedTasks);
 
             // Persist to backend
-            // Map UI 'Pending' to DB 'To Do'
             const dbStatus = newStatus === 'Pending' ? 'To Do' : newStatus;
 
-            fetch(`/api/task/${draggableId}`, {
-                method: 'PUT',
+            fetch(`/api/task/${draggableId}/status`, {
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: dbStatus })
             }).catch(err => {
                 console.error("Failed to update task status:", err);
-                // Optionally revert state here if needed
+                // Revert changes if API fails
+                setTasks(tasks);
+                alert("Failed to update task status");
             });
-
         }
     };
+
+    if (!enabled) {
+        return null;
+    }
 
     const handleDelete = async (e: React.MouseEvent, taskId: number) => {
         e.stopPropagation();

@@ -1,7 +1,6 @@
 .sidebar {
     width: 280px;
-    background: rgba(255, 255, 255, 0.03);
-    /* ultra-light glass */
+    background: var(--glass-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-right: 1px solid var(--glass-border);
@@ -12,6 +11,7 @@
     z-index: 10;
     flex-shrink: 0;
     overflow-y: auto;
+    color: var(--foreground);
 }
 
 .logo {
@@ -19,7 +19,7 @@
     font-weight: 800;
     margin-bottom: 3rem;
     letter-spacing: -0.5px;
-    background: linear-gradient(to right, #818cf8, #f472b6);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -37,7 +37,7 @@
 .navItem {
     padding: 0.8rem 1rem;
     border-radius: 12px;
-    color: #94a3b8;
+    color: var(--muted-foreground);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
@@ -49,14 +49,15 @@
 
 .navItem:hover {
     background: var(--surface-hover);
-    color: #fff;
+    color: var(--foreground);
     transform: translateX(4px);
+    border-color: var(--border-color);
 }
 
 .navItemActive {
     background: var(--surface-active);
-    border: 1px solid var(--glass-border);
-    color: #fff;
+    border: 1px solid var(--border-color);
+    color: var(--foreground);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 

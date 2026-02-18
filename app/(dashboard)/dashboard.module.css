@@ -3,7 +3,7 @@
     min-height: 100vh;
     background: transparent;
     /* Changed from white to transparent to show global background */
-    color: var(--foreground);
+    color: black;
     position: relative;
     z-index: 1;
     padding: 10px;

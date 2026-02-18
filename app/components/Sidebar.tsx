@@ -2,7 +2,7 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import styles from './Sidebar.module.css';
-import { PanelLeftClose } from 'lucide-react';
+import { PanelLeftClose, LogOut } from 'lucide-react';
 
 interface SidebarProps {
     onClose?: () => void;
@@ -11,7 +11,18 @@ interface SidebarProps {
 export default function Sidebar({ onClose }: SidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, logout } = useAuth();
+
+    const handleNavigation = (path: string) => {
+        router.push(path);
+        if (onClose) onClose();
+    };
+
+    const handleLogout = () => {
+        logout();
+        router.push('/');
+        if (onClose) onClose();
+    };
 
     return (
         <aside className={styles.sidebar}>
@@ -22,7 +33,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
                     style={{
                         background: 'none',
                         border: 'none',
-                        color: 'rgba(255,255,255,0.5)',
+                        color: 'var(--muted-foreground)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -32,44 +43,45 @@ export default function Sidebar({ onClose }: SidebarProps) {
                     <PanelLeftClose size={24} />
                 </button>
             </div>
-            <nav className={styles.nav}>
+
+            <nav className={styles.nav} style={{ flex: 1 }}>
                 {isAuthenticated ? (
                     <>
                         <div
                             className={`${styles.navItem} ${pathname === '/Home' || pathname === '/' ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/Home')}
+                            onClick={() => handleNavigation('/Home')}
                         >
                             Dashboard
                         </div>
 
                         <div
-                            className={`${styles.navItem} ${pathname === '/Project' ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/Project')}
+                            className={`${styles.navItem} ${pathname.startsWith('/Project') ? styles.navItemActive : ''}`}
+                            onClick={() => handleNavigation('/Project')}
                         >
                             Project
                         </div>
 
                         <div
                             className={`${styles.navItem} ${pathname === '/MyTask' ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/MyTask')}
+                            onClick={() => handleNavigation('/MyTask')}
                         >
                             My Tasks
                         </div>
                         <div
                             className={`${styles.navItem} ${pathname === '/Calendar' ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/Calendar')}
+                            onClick={() => handleNavigation('/Calendar')}
                         >
                             Calendar
                         </div>
                         <div
                             className={`${styles.navItem} ${pathname.startsWith('/Group') ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/Group')}
+                            onClick={() => handleNavigation('/Group')}
                         >
                             Groups
                         </div>
                         <div
                             className={`${styles.navItem} ${pathname === '/Settings' ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/Settings')}
+                            onClick={() => handleNavigation('/Settings')}
                         >
                             Settings
                         </div>
@@ -78,19 +90,32 @@ export default function Sidebar({ onClose }: SidebarProps) {
                     <>
                         <div
                             className={`${styles.navItem} ${pathname === '/login' ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/login')}
+                            onClick={() => handleNavigation('/login')}
                         >
                             Login
                         </div>
                         <div
                             className={`${styles.navItem} ${pathname === '/register' ? styles.navItemActive : ''}`}
-                            onClick={() => router.push('/register')}
+                            onClick={() => handleNavigation('/register')}
                         >
                             Register
                         </div>
                     </>
                 )}
             </nav>
+
+            {isAuthenticated && (
+                <div >
+                    <div
+                        className={styles.navItem}
+                        onClick={handleLogout}
+                        style={{ color: 'var(--danger)' }}
+                    >
+                        <LogOut />
+                        <span>Logout</span>
+                    </div>
+                </div>
+            )}
         </aside>
     );
 }

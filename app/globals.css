@@ -1,23 +1,54 @@
 :root {
-  /* HSL Color Palette for easier manipulation */
-  --primary-hue: 250;
-  --secondary-hue: 330;
-  --success-hue: 150;
+  /* Core (professional light theme) */
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+  --muted-foreground: #475569; /* slate-600 */
 
-  --background: #02020282;
-  --foreground: #f8fafc;
+  --color-light-blue: #e0f2fe;
+  --color-light-indigo: #e0e7ff;
+  --color-light-purple: #f3e8ff;
+  --color-light-pink: #fce7f3;
+  --color-light-rose: #ffe4e6;
+  --color-light-orange: #ffedd5;
+  --color-light-green: #dcfce7;
+  --color-light-teal: #ccfbf1;
 
-  --primary: hsl(var(--primary-hue), 80%, 65%);
-  --secondary: hsl(var(--secondary-hue), 80%, 65%);
+  /* Brand */
+  --primary: #4f46e5; /* indigo-600 */
+  --primary-hover: #4338ca; /* indigo-700 */
+  --primary-foreground: #ffffff;
+  --secondary: #14b8a6; /* teal-500 */
+  --secondary-hover: #0d9488; /* teal-600 */
 
-  /* Glassmorphism Variables */
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-highlight: rgba(255, 255, 255, 0.15);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  /* Semantic */
+  --success: #059669; /* emerald-600 */
+  --warning: #d97706; /* amber-600 */
+  --danger: #dc2626; /* red-600 */
+  --success-bg: rgba(5, 150, 105, 0.12);
+  --warning-bg: rgba(217, 119, 6, 0.12);
+  --danger-bg: rgba(220, 38, 38, 0.12);
 
-  --surface-hover: rgba(255, 255, 255, 0.06);
-  --surface-active: rgba(255, 255, 255, 0.09);
+  /* Focus ring */
+  --ring: rgba(79, 70, 229, 0.22);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-primary: 0 10px 25px rgba(79, 70, 229, 0.18);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(226, 232, 240, 0.9);
+  --glass-highlight: rgba(255, 255, 255, 0.9);
+  --glass-shadow: var(--shadow-md);
+
+  --surface: #ffffff;
+  --surface-hover: #f1f5f9; /* slate-100 */
+  --surface-active: #e2e8f0; /* slate-200 */
+
+  --border-color: #e2e8f0;
+
+  --scrollbar-thumb: rgba(15, 23, 42, 0.18);
+  --scrollbar-thumb-hover: rgba(15, 23, 42, 0.28);
 }
 
 body {
@@ -29,7 +60,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Dynamic Mesh Gradient Background */
+
 body::before {
   content: '';
   position: fixed;
@@ -39,12 +70,12 @@ body::before {
   height: 100%;
   z-index: -1;
   background:
-    radial-gradient(circle at 15% 50%, rgba(79, 70, 229, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15), transparent 25%);
+    radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.08), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(20, 184, 166, 0.08), transparent 40%);
   filter: blur(40px);
 }
 
-/* Scrollbar */
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -54,15 +85,15 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--scrollbar-thumb-hover);
 }
 
-/* Utilities */
+
 .container-custom {
   max-width: 600px;
   margin: 0 auto;
@@ -79,9 +110,9 @@ body::before {
 }
 
 .glass-input {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid var(--glass-border);
-  color: white;
+  color: var(--foreground);
   padding: 1rem 1.25rem;
   border-radius: 14px;
   width: 100%;
@@ -91,9 +122,9 @@ body::before {
 
 .glass-input:focus {
   outline: none;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.95);
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 4px var(--ring);
 }
 
 .glass-button {
@@ -111,7 +142,7 @@ body::before {
 .glass-button:hover {
   opacity: 0.95;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: var(--shadow-primary);
 }
 
 .glass-button:active {
@@ -119,14 +150,34 @@ body::before {
 }
 
 .gradient-text {
-  background: linear-gradient(to right, #818cf8, #f472b6);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   font-weight: 800;
 }
 
-/* Animations */
+/* Simple color utility classes (used in TSX) */
+.text-primary {
+  color: var(--primary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-warning {
+  color: var(--warning);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
 @keyframes slideUpFade {
   from {
     opacity: 0;

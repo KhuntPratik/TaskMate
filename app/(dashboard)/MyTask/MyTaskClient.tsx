@@ -20,7 +20,7 @@ interface Props {
 
 export default function MyTaskClient({ tasks, projects }: Props) {
     const [taskState, setTaskState] = useState<Task[]>(tasks);
-    const [filter, setFilter] = useState<'All' | 'Pending' | 'Completed'>('All');
+    const [filter, setFilter] = useState<'All' | 'Pending' | 'Completed' | 'In Progress'>('All');
     const [projectFilter, setProjectFilter] = useState<number | 'All'>('All');
     const [viewMode, setViewMode] = useState<'list' | 'board'>('board');
     const [searchQuery, setSearchQuery] = useState('');
@@ -30,8 +30,10 @@ export default function MyTaskClient({ tasks, projects }: Props) {
         const statusMatch = filter === 'All'
             ? true
             : filter === 'Pending'
-                ? task.status !== 'Completed'
-                : task.status === 'Completed';
+                ? task.status === 'Pending'
+                : filter === 'In Progress'
+                    ? task.status === 'In Progress'
+                    : task.status === 'Completed';
 
         // Project Filter
         const projectMatch = projectFilter === 'All' || task.projectId === projectFilter;
@@ -83,8 +85,8 @@ export default function MyTaskClient({ tasks, projects }: Props) {
 
                             {/* Project Filter Dropdown */}
                             <select
-                                className={styles.viewToggle} // Reusing viewToggle style for basic shape, or add new style
-                                style={{ padding: '0.5rem', outline: 'none', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px' }}
+                                className={styles.viewToggle}
+                                style={{ padding: '0.5rem', outline: 'none', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255,0.1)', color: 'black', borderRadius: '8px' }}
                                 value={projectFilter}
                                 onChange={(e) => setProjectFilter(e.target.value === 'All' ? 'All' : Number(e.target.value))}
                             >
@@ -118,26 +120,32 @@ export default function MyTaskClient({ tasks, projects }: Props) {
                     ) : (
                         <>
                             {/* Filter Tabs */}
-                            <div className={styles.filters}>
-                                <div
-                                    className={`${styles.filterTab} ${filter === 'All' ? styles.filterActive : ''}`}
-                                    onClick={() => setFilter('All')}
-                                >
-                                    All Tasks
-                                </div>
-                                <div
-                                    className={`${styles.filterTab} ${filter === 'Pending' ? styles.filterActive : ''}`}
-                                    onClick={() => setFilter('Pending')}
-                                >
-                                    Pending
-                                </div>
-                                <div
-                                    className={`${styles.filterTab} ${filter === 'Completed' ? styles.filterActive : ''}`}
-                                    onClick={() => setFilter('Completed')}
-                                >
-                                    Completed
-                                </div>
-                            </div>
+                        <div className={styles.filters}>
+    <div
+        className={`${styles.filterTab} ${filter === 'All' ? styles.filterActive : ''}`}
+        onClick={() => setFilter('All')}
+    >
+        All Tasks
+    </div>
+    <div
+        className={`${styles.filterTab} ${filter === 'Pending' ? styles.filterActive : ''}`}
+        onClick={() => setFilter('Pending')}
+    >
+        Pending
+    </div>
+    <div
+        className={`${styles.filterTab} ${filter === 'In Progress' ? styles.filterActive : ''}`}
+        onClick={() => setFilter('In Progress')}
+    >
+        In Progress
+    </div>
+    <div
+        className={`${styles.filterTab} ${filter === 'Completed' ? styles.filterActive : ''}`}
+        onClick={() => setFilter('Completed')}
+    >
+        Completed
+    </div>
+</div>
 
                             {/* Task List */}
                             <table className={styles.taskTable}>

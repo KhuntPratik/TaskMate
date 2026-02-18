@@ -25,7 +25,7 @@ const DUMMY_GROUPS: Group[] = [
         memberCount: 5,
         tasksCompleted: 12,
         totalTasks: 15,
-        color: '#000000',
+        color: 'var(--primary)',
         lastActive: '2h ago'
     },
     {
@@ -36,7 +36,7 @@ const DUMMY_GROUPS: Group[] = [
         memberCount: 8,
         tasksCompleted: 45,
         totalTasks: 60,
-        color: '#333333',
+        color: 'var(--secondary)',
         lastActive: '5m ago'
     },
     {
@@ -47,7 +47,7 @@ const DUMMY_GROUPS: Group[] = [
         memberCount: 12,
         tasksCompleted: 8,
         totalTasks: 24,
-        color: '#666666',
+        color: '#f97316',
         lastActive: '1d ago'
     },
     {
@@ -58,7 +58,7 @@ const DUMMY_GROUPS: Group[] = [
         memberCount: 3,
         tasksCompleted: 2,
         totalTasks: 10,
-        color: '#999999',
+        color: '#8b5cf6',
         lastActive: '3h ago'
     }
 ];
@@ -85,7 +85,7 @@ export default function GroupPage() {
             memberCount: 1,
             tasksCompleted: 0,
             totalTasks: 0,
-            color: '#f5f5f5',
+            color: 'var(--surface-active)',
             lastActive: 'Just now'
         };
 
@@ -102,7 +102,7 @@ export default function GroupPage() {
                 <header className={styles.header}>
                     <div>
                         <h1 className={styles.title}>Your Groups</h1>
-                        <p style={{ color: '#64748b', marginTop: '0.5rem' }}>
+                        <p style={{ color: 'var(--muted-foreground)', marginTop: '0.5rem' }}>
                             Collaborate and track team progress
                         </p>
                     </div>
@@ -189,7 +189,6 @@ export default function GroupPage() {
                                         className={styles.progressFill}
                                         style={{
                                             width: `${group.totalTasks > 0 ? getProgress(group.tasksCompleted, group.totalTasks) : 0}%`,
-                                            background: '#000000' /* Force black for progress bar */
                                         }}
                                     />
                                 </div>
@@ -203,7 +202,7 @@ export default function GroupPage() {
                                         </div>
                                     ))}
                                     {group.memberCount > 3 && (
-                                        <div className={styles.memberAvatar} style={{ background: '#333333' }}>
+                                        <div className={styles.memberAvatar} style={{ background: 'var(--surface-active)' }}>
                                             +{group.memberCount - 3}
                                         </div>
                                     )}
@@ -220,12 +219,12 @@ export default function GroupPage() {
                         className={styles.groupCard}
                         style={{
                             borderStyle: 'dashed',
-                            background: '#f8fafc',
+                            background: 'var(--surface)',
                             alignItems: 'center',
                             justifyContent: 'center',
                             cursor: 'pointer',
                             minHeight: '300px',
-                            borderColor: '#cbd5e1'
+                            borderColor: 'var(--border-color)'
                         }}
                         onClick={() => setShowForm(true)}
                     >
@@ -234,19 +233,19 @@ export default function GroupPage() {
                                 width: '64px',
                                 height: '64px',
                                 borderRadius: '50%',
-                                background: '#e2e8f0',
+                                background: 'var(--surface-active)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 fontSize: '2rem',
-                                color: '#64748b',
+                                color: 'var(--muted-foreground)',
                                 marginBottom: '1rem',
-                                border: '1px solid #cbd5e1'
+                                border: '1px solid var(--border-color)'
                             }}
                         >
                             +
                         </div>
-                        <h3 style={{ color: '#64748b' }}>Join or Create Group</h3>
+                        <h3 style={{ color: 'var(--muted-foreground)' }}>Join or Create Group</h3>
                     </div>
                 </div>
             </main>
