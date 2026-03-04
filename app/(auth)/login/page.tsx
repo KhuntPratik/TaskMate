@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const success = await login(email, password);
     if (success) {
@@ -37,9 +37,10 @@ export default function LoginPage() {
       <hr />
 
       {/* ✅ Google Login Button */}
-      <button onClick={() => signIn("google")}>
+      <button onClick={() => signIn("google", { callbackUrl: "/Home" })}>
         Login with Google (Calendar Access)
       </button>
     </div>
   );
 }
+

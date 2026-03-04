@@ -49,12 +49,14 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
                             backdropFilter: 'blur(10px)'
                         }}
                     >
-                        <PanelLeftOpen size={24} />
+                        <PanelLeftOpen size={24} color="var(--muted-foreground)" />
                     </button>
                 </div>
             )}
 
-            <main style={{ flex: 1, overflowY: 'auto', position: 'relative' }}>
+            <main
+                style={{ flex: 1, overflowY: 'auto', position: 'relative' }}
+            >
                 {children}
             </main>
         </div>

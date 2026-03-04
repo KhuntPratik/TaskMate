@@ -73,7 +73,7 @@
 }
 
 .searchInput {
-    background: #ffffff;
+    background: var(--surface);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 0.6rem 1rem 0.6rem 2.5rem;
@@ -89,10 +89,10 @@
 }
 
 .searchInput:focus {
-    background: #ffffff;
+    background: var(--surface);
     border-color: var(--primary);
     width: 240px;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--ring);
 }
 
 /* Filters */
@@ -151,7 +151,7 @@
 
 .tableRow {
     transition: transform 0.2s, background 0.2s;
-    background: #ffffff;
+    background: var(--surface);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
 }
@@ -214,19 +214,19 @@
 }
 
 .statusDone {
-    color: #059669;
+    color: var(--success);
     text-decoration: line-through;
     opacity: 0.7;
 }
 
 .statusPending {
-    color: #d97706;
+    color: var(--warning);
 }
 
 
 .viewToggle {
     display: flex;
-    background: #ffffff;
+    background: var(--surface);
     border-radius: 12px;
     padding: 4px;
     margin-right: 1rem;
@@ -291,7 +291,7 @@
     flex: 1;
     min-width: 320px;
     max-width: 380px;
-    background: #ffffff;
+    background: var(--surface);
     border: 1px solid var(--border-color);
     border-radius: 20px;
     display: flex;
@@ -337,7 +337,7 @@
 }
 
 .columnCount {
-    background: #ffffff;
+    background: var(--surface-active);
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.75rem;
@@ -370,7 +370,7 @@
 
 /* Task Card */
 .taskCard {
-    background: #ffffff;
+    background: var(--surface);
     border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1.25rem;
@@ -444,12 +444,12 @@
 
 .editBtn:hover {
     background: var(--color-light-blue);
-    color: #0369a1 !important;
+    color: var(--primary) !important;
 }
 
 .deleteBtn:hover {
     background: var(--color-light-rose) !important;
-    color: #be123c !important;
+    color: var(--danger) !important;
     transform: scale(1.1);
 }
 
@@ -478,4 +478,36 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+}
+
+/* ID Badge */
+.idBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+/* ID Badge */
+.idBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
 }

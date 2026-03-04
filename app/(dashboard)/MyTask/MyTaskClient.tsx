@@ -86,13 +86,13 @@ export default function MyTaskClient({ tasks, projects }: Props) {
                             {/* Project Filter Dropdown */}
                             <select
                                 className={styles.viewToggle}
-                                style={{ padding: '0.5rem', outline: 'none', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255,0.1)', color: 'black', borderRadius: '8px' }}
+                                style={{ padding: '0.5rem', outline: 'none', cursor: 'pointer', border: '1px solid var(--border-color)', background: 'var(--surface)', color: 'var(--foreground)', borderRadius: '8px' }}
                                 value={projectFilter}
                                 onChange={(e) => setProjectFilter(e.target.value === 'All' ? 'All' : Number(e.target.value))}
                             >
-                                <option value="All" style={{ color: 'black' }}>All Projects</option>
+                                <option value="All" style={{ color: 'var(--foreground)', background: 'var(--surface)' }}>All Projects</option>
                                 {projects.map(p => (
-                                    <option key={p.projectid} value={p.projectid} style={{ color: 'black' }}>{p.projectname}</option>
+                                    <option key={p.projectid} value={p.projectid} style={{ color: 'var(--foreground)', background: 'var(--surface)' }}>{p.projectname}</option>
                                 ))}
                             </select>
 
@@ -163,7 +163,10 @@ export default function MyTaskClient({ tasks, projects }: Props) {
                                     {filteredTasks.map(task => (
                                         <tr key={task.id} className={styles.tableRow}>
                                             <td className={`${styles.tableCell} ${task.status === 'Completed' ? styles.statusDone : styles.statusPending} ${styles.statusIndicator}`}>
-                                                {task.title}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                    <span>{task.title}</span>
+                                                    <span className={styles.idBadge}>#{task.id}</span>
+                                                </div>
                                             </td>
                                             <td className={styles.tableCell}>
                                                 <span className={`${styles.badge} ${task.priority === 'High' ? styles.badgeHigh :
@@ -199,7 +202,7 @@ export default function MyTaskClient({ tasks, projects }: Props) {
                                                     <Edit size={16} />
                                                 </button>
                                                 <button
-                                                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', opacity: 0.7 }}
+                                                    style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', opacity: 0.7 }}
                                                     onClick={() => handleDelete(task.id)}
                                                     title="Delete"
                                                 >

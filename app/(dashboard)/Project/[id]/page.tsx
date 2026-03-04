@@ -43,7 +43,7 @@ export default function ProjectDetailPage() {
     if (error || !project) {
         return (
             <div className={styles.container}>
-                <div className="text-red-400">{error || "Project not found"}</div>
+                <div className={styles.errorText}>{error || "Project not found"}</div>
                 <Link href="/Project" className={styles.backButton}>
                     <ArrowLeft size={16} /> Back to Projects
                 </Link>
@@ -78,25 +78,28 @@ export default function ProjectDetailPage() {
                 </div>
                 <div className={styles.statCard}>
                     <span className={styles.statLabel}>Completed</span>
-                    <span className={styles.statValue} style={{ color: '#4ade80' }}>{completedTasks}</span>
+                    <span className={`${styles.statValue} ${styles.statValueSuccess}`}>{completedTasks}</span>
                 </div>
                 <div className={styles.statCard}>
                     <span className={styles.statLabel}>Pending</span>
-                    <span className={styles.statValue} style={{ color: '#fbbf24' }}>{pendingTasks}</span>
+                    <span className={`${styles.statValue} ${styles.statValueWarning}`}>{pendingTasks}</span>
                 </div>
             </div>
 
             <section className={styles.tasksSection}>
-                <h2 className="text-2xl font-bold text-white mb-4">Tasks</h2>
+                <h2 className={styles.tasksTitle}>Tasks</h2>
 
                 {allTasks.length === 0 ? (
-                    <div className="text-slate-400 italic">No tasks created yet.</div>
+                    <div className={styles.emptyText}>No tasks created yet.</div>
                 ) : (
                     <div className={styles.taskList}>
                         {allTasks.map((task: any) => (
                             <div key={task.taskid} className={styles.taskCard}>
                                 <div className={styles.taskInfo}>
-                                    <h3 className={styles.taskTitle}>{task.title}</h3>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <h3 className={styles.taskTitle}>{task.title}</h3>
+                                        <span className={styles.idBadge}>#{task.taskid}</span>
+                                    </div>
                                     <div className={styles.taskMeta}>
                                         <span className={`${styles.priority} ${styles[task.priority]}`}>{task.priority}</span>
                                         <span className={styles.status}>{task.status}</span>
@@ -110,11 +113,11 @@ export default function ProjectDetailPage() {
                                 </div>
                                 <div>
                                     {task.status === 'Completed' ? (
-                                        <CheckCircle2 color="#4ade80" />
+                                        <CheckCircle2 className={styles.taskStatusDone} />
                                     ) : task.status === 'In Progress' ? (
-                                        <Clock color="#fbbf24" />
+                                        <Clock className={styles.taskStatusProgress} />
                                     ) : (
-                                        <Circle color="#94a3b8" />
+                                        <Circle className={styles.taskStatusPending} />
                                     )}
                                 </div>
                             </div>

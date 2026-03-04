@@ -22,13 +22,13 @@
     font-weight: 700;
     margin: 0;
     /* Fallback (always readable) */
-    color: black;
+    color: var(--foreground);
     display: inline-block;
 }
 
 @supports (-webkit-background-clip: text) or (background-clip: text) {
     .title {
-        background: black;
+        background: var(--foreground);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -37,7 +37,7 @@
 }
 
 .createButton {
-    background: black;
+    background: var(--primary);
     color: var(--primary-foreground);
     border: none;
     padding: 0.75rem 1.5rem;

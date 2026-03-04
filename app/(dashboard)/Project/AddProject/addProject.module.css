@@ -6,13 +6,13 @@
     flex-direction: column;
     gap: 2rem;
     padding: 2rem;
+    color: var(--foreground);
 }
 
 .title {
     font-size: 2.5rem;
     font-weight: 800;
-    color: white;
-    background: linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #818cf8 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -20,15 +20,14 @@
 }
 
 .formCard {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--surface);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 2.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
 }
 
 .formGroup {
@@ -38,7 +37,7 @@
 }
 
 .label {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--muted-foreground);
     font-size: 0.95rem;
     font-weight: 500;
 }
@@ -46,11 +45,11 @@
 .input,
 .textarea {
     width: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #fff;
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 1rem;
-    color: white;
+    color: var(--foreground);
     font-size: 1rem;
     transition: all 0.3s ease;
     font-family: inherit;
@@ -60,8 +59,7 @@
 .textarea:focus {
     outline: none;
     border-color: var(--primary);
-    background: rgba(0, 0, 0, 0.3);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 4px var(--ring);
 }
 
 .textarea {
@@ -97,9 +95,9 @@
 }
 
 .error {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+    background: var(--danger-bg);
+    border: 1px solid rgba(220, 38, 38, 0.2);
     padding: 1rem;
     border-radius: 8px;
     font-size: 0.9rem;

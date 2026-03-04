@@ -155,7 +155,10 @@ export default function KanbanBoard({ tasks, setTasks }: KanbanBoardProps) {
                                                             style={provided.draggableProps.style}
                                                         >
                                                             <div className={styles.cardHeader}>
-                                                                <div className={styles.cardTitle}>{task.title}</div>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
+                                                                    <div className={styles.cardTitle}>{task.title}</div>
+                                                                    <span className={styles.idBadge}>#{task.id}</span>
+                                                                </div>
                                                                 <div className={styles.cardActions}>
                                                                     <button
                                                                         className={styles.editBtn}

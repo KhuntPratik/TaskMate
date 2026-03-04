@@ -3,6 +3,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import styles from './Sidebar.module.css';
 import { PanelLeftClose, LogOut } from 'lucide-react';
+import { useEffect } from 'react';
 
 interface SidebarProps {
     onClose?: () => void;
@@ -15,21 +16,24 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
     const handleNavigation = (path: string) => {
         router.push(path);
-        if (onClose) onClose();
     };
 
     const handleLogout = () => {
         logout();
         router.push('/');
-        if (onClose) onClose();
     };
+
+    // Sidebar no longer closes on click outside as per user requirement
 
     return (
         <aside className={styles.sidebar}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                 <div className={styles.logo} style={{ marginBottom: 0 }}>TaskMate</div>
                 <button
-                    onClick={onClose}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (onClose) onClose();
+                    }}
                     style={{
                         background: 'none',
                         border: 'none',
@@ -66,6 +70,12 @@ export default function Sidebar({ onClose }: SidebarProps) {
                             onClick={() => handleNavigation('/MyTask')}
                         >
                             My Tasks
+                        </div>
+                        <div
+                            className={`${styles.navItem} ${pathname === '/TaskList' ? styles.navItemActive : ''}`}
+                            onClick={() => handleNavigation('/TaskList')}
+                        >
+                            Task List
                         </div>
                         <div
                             className={`${styles.navItem} ${pathname === '/Calendar' ? styles.navItemActive : ''}`}

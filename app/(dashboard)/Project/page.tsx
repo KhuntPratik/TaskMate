@@ -119,8 +119,11 @@ export default function ProjectPage() {
                             onClick={() => handleCardClick(project.projectid)}
                         >
                             <div className={styles.cardTop}>
-                                <div className={styles.projectIcon}>
-                                    <FolderKanban size={24} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1 }}>
+                                    <div className={styles.projectIcon}>
+                                        <FolderKanban size={24} />
+                                    </div>
+                                    <span className={styles.idBadge}>ID: {project.projectid}</span>
                                 </div>
                                 <div className={styles.moreButtonWrapper} ref={openMenuId === project.projectid ? menuRef : null}>
                                     <button
