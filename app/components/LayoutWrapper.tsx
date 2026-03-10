@@ -55,6 +55,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
             )}
 
             <main
+                className="no-scrollbar"
                 style={{ flex: 1, overflowY: 'auto', position: 'relative' }}
             >
                 {children}

@@ -2,8 +2,10 @@
 import MyTaskClient from "./MyTaskClient";
 import { Task } from "./KanbanBoard";
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 export default function MyTaskPage() {
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [taskData, setTaskData] = useState<any[]>([]);
     const [projectData, setProjectData] = useState<any[]>([]);
@@ -11,9 +13,14 @@ export default function MyTaskPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const token = user?.token || localStorage.getItem('token');
                 const [tasksRes, projectsRes] = await Promise.all([
-                    fetch("/api/task"),
-                    fetch("/api/project")
+                    fetch("/api/task", {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }),
+                    fetch("/api/project", {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    })
                 ]);
 
                 const tasks = await tasksRes.json();
@@ -27,8 +34,12 @@ export default function MyTaskPage() {
                 setLoading(false);
             }
         }
-        fetchData();
-    }, [])
+        if (user || localStorage.getItem('token')) {
+            fetchData();
+        } else {
+            setLoading(false);
+        }
+    }, [user])
 
     const tasks: Task[] = taskData.map((task) => ({
         id: task.taskid,

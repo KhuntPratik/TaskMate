@@ -34,7 +34,10 @@ export default function CalendarPage() {
 
     const fetchTasks = async () => {
         try {
-            const res = await fetch("/api/task");
+            const token = user?.token || localStorage.getItem('token');
+            const res = await fetch("/api/task", {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             const data = await res.json();
 
             if (Array.isArray(data)) {
@@ -54,7 +57,10 @@ export default function CalendarPage() {
 
     const fetchTaskLists = async () => {
         try {
-            const res = await fetch("/api/tasklist");
+            const token = user?.token || localStorage.getItem('token');
+            const res = await fetch("/api/tasklist", {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             const data = await res.json();
             if (Array.isArray(data)) {
                 setTaskLists(data);
@@ -66,9 +72,11 @@ export default function CalendarPage() {
     };
 
     useEffect(() => {
-        fetchTasks();
-        fetchTaskLists();
-    }, []);
+        if (user || localStorage.getItem('token')) {
+            fetchTasks();
+            fetchTaskLists();
+        }
+    }, [user]);
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();

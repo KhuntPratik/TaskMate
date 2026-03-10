@@ -1,21 +1,27 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import styles from '../auth.module.css';
 
 export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const { register } = useAuth();
+    const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            // login();
-            setLoading(false);
-        }, 1500);
+        const success = await register(username, email, password);
+        setLoading(false);
+        if (success) {
+            router.push('/login');
+        }
     };
 
     return (
@@ -28,12 +34,13 @@ export default function RegisterPage() {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.inputGroup}>
-                        <label className={styles.label}>Message</label>
-                        <label className={styles.label}>Full Name</label>
+                        <label className={styles.label}>Username</label>
                         <input
                             type="text"
                             className="glass-input"
-                            placeholder="John Doe"
+                            placeholder="JohnDoe"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             required
                         />
                     </div>
@@ -44,6 +51,8 @@ export default function RegisterPage() {
                             type="email"
                             className="glass-input"
                             placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
@@ -54,6 +63,8 @@ export default function RegisterPage() {
                             type="password"
                             className="glass-input"
                             placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>

@@ -4,10 +4,12 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Loader2, Calendar, CheckCircle2, Circle, Clock } from 'lucide-react';
 import Link from 'next/link';
 import styles from './detail.module.css';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function ProjectDetailPage() {
     const params = useParams();
     const router = useRouter();
+    const { user } = useAuth();
     const [project, setProject] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -17,7 +19,12 @@ export default function ProjectDetailPage() {
 
         const fetchProject = async () => {
             try {
-                const res = await fetch(`/api/project/${params.id}`);
+                const token = user?.token || localStorage.getItem('token');
+                const res = await fetch(`/api/project/${params.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (!res.ok) throw new Error("Failed to fetch project");
                 const data = await res.json();
                 setProject(data);
@@ -29,8 +36,10 @@ export default function ProjectDetailPage() {
             }
         };
 
-        fetchProject();
-    }, [params.id]);
+        if (user || localStorage.getItem('token')) {
+            fetchProject();
+        }
+    }, [params.id, user]);
 
     if (loading) {
         return (
@@ -52,7 +61,7 @@ export default function ProjectDetailPage() {
     }
 
     // Flatten tasks from tasklists
-    const allTasks = project.tasklists?.flatMap((list: any) => list.tasks) || [];
+    const allTasks = project.tasklists?.flatMap((list: any) => list.tasks || []) || [];
     const completedTasks = allTasks.filter((t: any) => t.status === 'Completed').length;
     const pendingTasks = allTasks.filter((t: any) => t.status !== 'Completed').length;
 

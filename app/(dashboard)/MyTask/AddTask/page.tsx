@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, Type, AlignLeft, Save, CheckSquare, AlertCircle, List, User } from "lucide-react";
 import styles from './addtask.module.css';
+import { useAuth } from "../../../context/AuthContext";
 
 type TaskForm = {
   listid: number | "";
@@ -17,6 +18,9 @@ type TaskForm = {
 
 export default function AddTaskPage() {
   const router = useRouter();
+  const { user } = useAuth();
+  const isAdmin = user?.roleid === 1;
+
   const [formData, setFormData] = useState<TaskForm>({
     listid: "",
     assignedto: "",
@@ -27,8 +31,43 @@ export default function AddTaskPage() {
     duedate: ""
   });
 
+  const [taskLists, setTaskLists] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = user?.token || localStorage.getItem('token');
+        if (!token) return;
+
+        // Fetch Task Lists
+        const listRes = await fetch("/api/tasklist", {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const listData = await listRes.json();
+        if (Array.isArray(listData)) setTaskLists(listData);
+
+        // Fetch Users (only if admin)
+        if (isAdmin) {
+          const userRes = await fetch("/api/user", {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          const userData = await userRes.json();
+          if (Array.isArray(userData)) setUsers(userData);
+        } else if (user) {
+          // If not admin, the only assignable user is themselves
+          setUsers([{ userid: user.userid, username: user.email?.split('@')[0] || 'Me' }]);
+          setFormData(prev => ({ ...prev, assignedto: user.userid || "" }));
+        }
+      } catch (error) {
+        console.error("Failed to fetch form data", error);
+      }
+    };
+
+    fetchData();
+  }, [user, isAdmin]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -46,9 +85,13 @@ export default function AddTaskPage() {
     setMessage("");
 
     try {
+      const token = user?.token || localStorage.getItem('token');
       const res = await fetch("/api/task", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(formData)
       });
 
@@ -65,7 +108,7 @@ export default function AddTaskPage() {
       setMessage("✅ Task created successfully!");
       setFormData({
         listid: "",
-        assignedto: "",
+        assignedto: isAdmin ? "" : (user?.userid || ""),
         title: "",
         description: "",
         priority: "Medium",
@@ -91,24 +134,33 @@ export default function AddTaskPage() {
         {/* IDs */}
         <div className={styles.row}>
           <div className={styles.formGroup}>
-            <label><List size={16} /> List ID</label>
-            <input
-              type="number"
+            <label><List size={16} /> Select List</label>
+            <select
               name="listid"
               value={formData.listid}
               onChange={handleChange}
               required
-            />
+            >
+              <option value="">Select a list</option>
+              {taskLists.map(list => (
+                <option key={list.listid} value={list.listid}>{list.listname}</option>
+              ))}
+            </select>
           </div>
           <div className={styles.formGroup}>
-            <label><User size={16} /> Assigned To (User ID)</label>
-            <input
-              type="number"
+            <label><User size={16} /> Assigned To</label>
+            <select
               name="assignedto"
               value={formData.assignedto}
               onChange={handleChange}
               required
-            />
+              disabled={!isAdmin}
+            >
+              <option value="">Select a user</option>
+              {users.map(u => (
+                <option key={u.userid} value={u.userid}>{u.username}</option>
+              ))}
+            </select>
           </div>
         </div>
 

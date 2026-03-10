@@ -8,12 +8,12 @@
 
 .authCard {
     width: 100%;
-    max-width: 440px;
-    padding: 2.5rem;
-    border-radius: 24px;
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
     /* Glass effect handled by global glass-panel class, but we can enforce local overrides if needed */
 }
 

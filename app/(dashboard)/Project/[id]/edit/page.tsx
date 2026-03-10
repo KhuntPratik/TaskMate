@@ -4,10 +4,12 @@ import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Save } from 'lucide-react';
 import styles from './editProject.module.css';
+import { useAuth } from '../../../../context/AuthContext';
 
 export default function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const router = useRouter();
+    const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
@@ -19,7 +21,12 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const res = await fetch(`/api/project/${id}`);
+                const token = user?.token || localStorage.getItem('token');
+                const res = await fetch(`/api/project/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (!res.ok) throw new Error("Failed to fetch project");
                 const data = await res.json();
                 setFormData({
@@ -41,10 +48,12 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         setError("");
 
         try {
+            const token = user?.token || localStorage.getItem('token');
             const res = await fetch(`/api/project/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(formData),
             });

@@ -1,8 +1,11 @@
 :root {
   /* Core (professional light theme) */
-  --background: #f8fafc; /* slate-50 */
-  --foreground: #0f172a; /* slate-900 */
-  --muted-foreground: #475569; /* slate-600 */
+  --background: #f8fafc;
+  /* slate-50 */
+  --foreground: #0f172a;
+  /* slate-900 */
+  --muted-foreground: #475569;
+  /* slate-600 */
 
   --color-light-blue: #e0f2fe;
   --color-light-indigo: #e0e7ff;
@@ -14,16 +17,23 @@
   --color-light-teal: #ccfbf1;
 
   /* Brand */
-  --primary: #4f46e5; /* indigo-600 */
-  --primary-hover: #4338ca; /* indigo-700 */
+  --primary: #4f46e5;
+  /* indigo-600 */
+  --primary-hover: #4338ca;
+  /* indigo-700 */
   --primary-foreground: #ffffff;
-  --secondary: #14b8a6; /* teal-500 */
-  --secondary-hover: #0d9488; /* teal-600 */
+  --secondary: #14b8a6;
+  /* teal-500 */
+  --secondary-hover: #0d9488;
+  /* teal-600 */
 
   /* Semantic */
-  --success: #059669; /* emerald-600 */
-  --warning: #d97706; /* amber-600 */
-  --danger: #dc2626; /* red-600 */
+  --success: #059669;
+  /* emerald-600 */
+  --warning: #d97706;
+  /* amber-600 */
+  --danger: #dc2626;
+  /* red-600 */
   --success-bg: rgba(5, 150, 105, 0.12);
   --warning-bg: rgba(217, 119, 6, 0.12);
   --danger-bg: rgba(220, 38, 38, 0.12);
@@ -42,13 +52,21 @@
   --glass-shadow: var(--shadow-md);
 
   --surface: #ffffff;
-  --surface-hover: #f1f5f9; /* slate-100 */
-  --surface-active: #e2e8f0; /* slate-200 */
+  --surface-hover: #f1f5f9;
+  /* slate-100 */
+  --surface-active: #e2e8f0;
+  /* slate-200 */
 
   --border-color: #e2e8f0;
 
   --scrollbar-thumb: rgba(15, 23, 42, 0.18);
   --scrollbar-thumb-hover: rgba(15, 23, 42, 0.28);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -58,6 +76,7 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  margin: 0;
 }
 
 

@@ -12,7 +12,9 @@ interface SidebarProps {
 export default function Sidebar({ onClose }: SidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, user } = useAuth();
+    const isAdmin = user?.roleid === 1;
+    const isUser = user?.roleid === 2;
 
     const handleNavigation = (path: string) => {
         router.push(path);
@@ -22,8 +24,6 @@ export default function Sidebar({ onClose }: SidebarProps) {
         logout();
         router.push('/');
     };
-
-    // Sidebar no longer closes on click outside as per user requirement
 
     return (
         <aside className={styles.sidebar}>
@@ -48,9 +48,22 @@ export default function Sidebar({ onClose }: SidebarProps) {
                 </button>
             </div>
 
+            {isAuthenticated && (
+                <div className={styles.logoutSection}>
+                    <div
+                        className={`${styles.navItem} ${styles.logoutButton}`}
+                        onClick={handleLogout}
+                    >
+                        <LogOut size={20} />
+                        <span>Logout</span>
+                    </div>
+                </div>
+            )}
+
             <nav className={styles.nav} style={{ flex: 1 }}>
                 {isAuthenticated ? (
                     <>
+                        {/* Common items for both Admin and User */}
                         <div
                             className={`${styles.navItem} ${pathname === '/Home' || pathname === '/' ? styles.navItemActive : ''}`}
                             onClick={() => handleNavigation('/Home')}
@@ -83,18 +96,30 @@ export default function Sidebar({ onClose }: SidebarProps) {
                         >
                             Calendar
                         </div>
-                        <div
-                            className={`${styles.navItem} ${pathname.startsWith('/Group') ? styles.navItemActive : ''}`}
-                            onClick={() => handleNavigation('/Group')}
-                        >
-                            Groups
-                        </div>
-                        <div
-                            className={`${styles.navItem} ${pathname === '/Settings' ? styles.navItemActive : ''}`}
-                            onClick={() => handleNavigation('/Settings')}
-                        >
-                            Settings
-                        </div>
+
+                        {/* Admin-only items */}
+                        {isAdmin && (
+                            <>
+                                <div
+                                    className={`${styles.navItem} ${pathname.startsWith('/Group') ? styles.navItemActive : ''}`}
+                                    onClick={() => handleNavigation('/Group')}
+                                >
+                                    Groups
+                                </div>
+                                <div
+                                    className={`${styles.navItem} ${pathname === '/Users' ? styles.navItemActive : ''}`}
+                                    onClick={() => handleNavigation('/Users')}
+                                >
+                                    Users
+                                </div>
+                                <div
+                                    className={`${styles.navItem} ${pathname === '/Settings' ? styles.navItemActive : ''}`}
+                                    onClick={() => handleNavigation('/Settings')}
+                                >
+                                    Settings
+                                </div>
+                            </>
+                        )}
                     </>
                 ) : (
                     <>
@@ -114,18 +139,6 @@ export default function Sidebar({ onClose }: SidebarProps) {
                 )}
             </nav>
 
-            {isAuthenticated && (
-                <div >
-                    <div
-                        className={styles.navItem}
-                        onClick={handleLogout}
-                        style={{ color: 'var(--danger)' }}
-                    >
-                        <LogOut />
-                        <span>Logout</span>
-                    </div>
-                </div>
-            )}
         </aside>
     );
 }

@@ -1,17 +1,41 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
+import { verifyToken } from "../../../lib/auth";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const tasks = await prisma.tasks.findMany({
-      include: {
-        tasklists: {
-          include: {
-            projects: true
+    const decoded = verifyToken(req) as any;
+    if (!decoded) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    let tasks;
+    if (decoded.roleid === 1) {
+      tasks = await prisma.tasks.findMany({
+        include: {
+          tasklists: {
+            include: {
+              projects: true
+            }
           }
-        }
-      }
-    });
+        },
+        orderBy: { createdat: 'desc' }
+      });
+    } else {
+      tasks = await prisma.tasks.findMany({
+        where: {
+          assignedto: decoded.userid
+        },
+        include: {
+          tasklists: {
+            include: {
+              projects: true
+            }
+          }
+        },
+        orderBy: { createdat: 'desc' }
+      });
+    }
 
     return NextResponse.json(tasks);
 
@@ -37,12 +61,17 @@ type TaskBody = {
 
 export async function POST(req: Request) {
   try {
+    const decoded = verifyToken(req) as any;
+    if (!decoded) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     const body: TaskBody = await req.json();
 
     const task = await prisma.tasks.create({
       data: {
         listid: body.listid,
-        assignedto: body.assignedto,
+        assignedto: body.assignedto || decoded.userid,
         title: body.title,
         description: body.description,
         priority: body.priority,

@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Save } from 'lucide-react';
 import styles from './addProject.module.css';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function AddProjectPage() {
     const router = useRouter();
+    const { user } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
@@ -20,15 +22,14 @@ export default function AddProjectPage() {
         setError("");
 
         try {
+            const token = user?.token || localStorage.getItem('token');
             const res = await fetch('/api/project', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    ...formData,
-                    CreatedBy: 1 // Default user ID as per requirement
-                }),
+                body: JSON.stringify(formData),
             });
 
             if (!res.ok) {

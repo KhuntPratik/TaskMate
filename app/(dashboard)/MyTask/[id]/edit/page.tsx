@@ -4,10 +4,12 @@ import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Save } from 'lucide-react';
 import styles from './editTask.module.css';
+import { useAuth } from '../../../../context/AuthContext';
 
 export default function EditTaskPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const router = useRouter();
+    const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
@@ -22,7 +24,12 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
     useEffect(() => {
         const fetchTask = async () => {
             try {
-                const res = await fetch(`/api/task/${id}`);
+                const token = user?.token || localStorage.getItem('token');
+                const res = await fetch(`/api/task/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (!res.ok) throw new Error("Failed to fetch task");
                 const data = await res.json();
 
@@ -46,8 +53,8 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                 setIsLoading(false);
             }
         };
-        fetchTask();
-    }, [id]);
+        if (user) fetchTask();
+    }, [id, user]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,10 +62,12 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
         setError("");
 
         try {
+            const token = user?.token || localStorage.getItem('token');
             const res = await fetch(`/api/task/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     ...formData,
