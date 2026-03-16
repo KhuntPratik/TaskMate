@@ -223,19 +223,14 @@ export default function UsersPage() {
             <div className={styles.container}>
                 <header className={styles.header}>
                     <div className={styles.titleSection}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <Users className="text-primary" size={32} />
-                            <div>
-                                <h1 className={styles.title}>User Management</h1>
-                                <p className={styles.subtitle}>Manage system users, roles, and access</p>
-                            </div>
-                        </div>
+                        <h1 className={styles.title}>User Management</h1>
+                        <p className={styles.subtitle}>Manage system users, roles, and access</p>
                     </div>
                     <button className={styles.addUserBtn} onClick={() => {
                         setFormData({ username: '', email: '', password: '', roleid: 2 });
                         setIsAddModalOpen(true);
                     }}>
-                        <Plus size={20} />
+                        <Plus size={16} />
                         <span>Add New User</span>
                     </button>
                 </header>
@@ -252,10 +247,7 @@ export default function UsersPage() {
                         />
                     </div>
                     <div className={styles.userStats}>
-                        <div className={styles.statItem}>
-                            <UserCheck size={18} className="text-success" />
-                            <span>{users.length} Total Users</span>
-                        </div>
+                        <span>{users.length} Total Users</span>
                     </div>
                 </div>
 
@@ -275,13 +267,8 @@ export default function UsersPage() {
                                 filteredUsers.map((user) => (
                                     <tr key={user.userid}>
                                         <td>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                                <div className={styles.avatar}>{user.username.charAt(0).toUpperCase()}</div>
-                                                <div>
-                                                    <div style={{ fontWeight: 600 }}>{user.username}</div>
-                                                    <div style={{ fontSize: '0.8rem', color: 'var(--muted-foreground)' }}>{user.email}</div>
-                                                </div>
-                                            </div>
+                                            <div style={{ fontWeight: 500, color: '#000' }}>{user.username}</div>
+                                            <div style={{ fontSize: '0.8rem', color: '#666' }}>{user.email}</div>
                                         </td>
                                         <td>
                                             <span className={user.roleid === 1 ? styles.adminBadge : styles.userBadge}>
@@ -296,21 +283,21 @@ export default function UsersPage() {
                                                     onChange={() => handleToggleRole(user)}
                                                     disabled={user.userid === currentUser?.userid}
                                                 />
-                                                <span className={styles.slider}></span>
+                                                Is Admin
                                             </label>
                                         </td>
                                         <td>{new Date(user.createdat).toLocaleDateString()}</td>
                                         <td>
                                             <div className={styles.actionButtons}>
-                                                <button className={`${styles.iconBtn} ${styles.editBtn}`} onClick={() => openEditModal(user)}>
-                                                    <Edit2 size={16} />
+                                                <button className={styles.iconBtn} onClick={() => openEditModal(user)}>
+                                                    Edit
                                                 </button>
                                                 <button
-                                                    className={`${styles.iconBtn} ${styles.deleteBtn}`}
+                                                    className={styles.iconBtn}
                                                     onClick={() => handleDelete(user.userid)}
                                                     disabled={user.userid === currentUser?.userid}
                                                 >
-                                                    <Trash2 size={16} />
+                                                    Delete
                                                 </button>
                                             </div>
                                         </td>
@@ -332,11 +319,11 @@ export default function UsersPage() {
                 {isAddModalOpen && (
                     <div className={styles.modalOverlay}>
                         <div className={styles.modal}>
-                            <button className={styles.closeBtn} onClick={() => setIsAddModalOpen(false)}>
-                                <X size={24} />
-                            </button>
                             <div className={styles.modalHeader}>
                                 <h2 className={styles.modalTitle}>Add New User</h2>
+                                <button className={styles.closeBtn} onClick={() => setIsAddModalOpen(false)}>
+                                    <X size={20} />
+                                </button>
                             </div>
                             <form onSubmit={handleAddUser}>
                                 <div className={styles.formGroup}>
@@ -389,14 +376,14 @@ export default function UsersPage() {
                 {isEditModalOpen && (
                     <div className={styles.modalOverlay}>
                         <div className={styles.modal}>
-                            <button className={styles.closeBtn} onClick={() => {
-                                setIsEditModalOpen(false);
-                                setSelectedUser(null);
-                            }}>
-                                <X size={24} />
-                            </button>
                             <div className={styles.modalHeader}>
                                 <h2 className={styles.modalTitle}>Edit User</h2>
+                                <button className={styles.closeBtn} onClick={() => {
+                                    setIsEditModalOpen(false);
+                                    setSelectedUser(null);
+                                }}>
+                                    <X size={20} />
+                                </button>
                             </div>
                             <form onSubmit={handleEditUser}>
                                 <div className={styles.formGroup}>

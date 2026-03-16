@@ -101,22 +101,10 @@ export default function Sidebar({ onClose }: SidebarProps) {
                         {isAdmin && (
                             <>
                                 <div
-                                    className={`${styles.navItem} ${pathname.startsWith('/Group') ? styles.navItemActive : ''}`}
-                                    onClick={() => handleNavigation('/Group')}
-                                >
-                                    Groups
-                                </div>
-                                <div
                                     className={`${styles.navItem} ${pathname === '/Users' ? styles.navItemActive : ''}`}
                                     onClick={() => handleNavigation('/Users')}
                                 >
                                     Users
-                                </div>
-                                <div
-                                    className={`${styles.navItem} ${pathname === '/Settings' ? styles.navItemActive : ''}`}
-                                    onClick={() => handleNavigation('/Settings')}
-                                >
-                                    Settings
                                 </div>
                             </>
                         )}

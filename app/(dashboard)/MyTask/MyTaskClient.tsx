@@ -6,6 +6,7 @@ import KanbanBoard, { Task } from './KanbanBoard';
 import styles from './mytask.module.css';
 import { useRouter } from 'next/navigation';
 import { Edit, Trash2, Search } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 
 export interface ProjectSummary {
@@ -19,6 +20,8 @@ interface Props {
 }
 
 export default function MyTaskClient({ tasks, projects }: Props) {
+    const { user } = useAuth();
+    const isAdmin = user?.roleid === 1;
     const [taskState, setTaskState] = useState<Task[]>(tasks);
     const [filter, setFilter] = useState<'All' | 'Pending' | 'Completed' | 'In Progress'>('All');
     const [projectFilter, setProjectFilter] = useState<number | 'All'>('All');
@@ -111,7 +114,9 @@ export default function MyTaskClient({ tasks, projects }: Props) {
                                     Board
                                 </button>
                             </div>
-                            <button className={styles.newTaskBtn} onClick={() => { router.push('/MyTask/AddTask') }}>+ NEW TASK</button>
+                            {isAdmin && (
+                                <button className={styles.newTaskBtn} onClick={() => { router.push('/MyTask/AddTask') }}>+ NEW TASK</button>
+                            )}
                         </div>
                     </header>
 

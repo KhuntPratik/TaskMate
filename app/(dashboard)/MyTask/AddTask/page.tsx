@@ -126,6 +126,16 @@ export default function AddTaskPage() {
     }
   };
 
+  if (!isAdmin) {
+    return (
+      <div className={styles.container} style={{ textAlign: 'center', padding: '4rem' }}>
+        <h1 style={{ color: '#ef4444' }}>Access Denied</h1>
+        <p>You do not have permission to create tasks. Only admins can create and assign tasks.</p>
+        <button onClick={() => router.push('/MyTask')} style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer', background: '#e5e7eb', border: 'none', borderRadius: '4px' }}>Back to My Tasks</button>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <h1>Create New Task</h1>

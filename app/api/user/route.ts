@@ -5,10 +5,10 @@ import bcrypt from "bcryptjs";
 
 export async function GET(req: Request) {
     try {
-        const decoded = verifyToken(req) as any;
-        if (!decoded || decoded.roleid !== 1) {
-            return NextResponse.json({ message: "Unauthorized. Admin access required." }, { status: 403 });
-        }
+        // const decoded = verifyToken(req) as any;
+        // if (!decoded || decoded.roleid !== 1) {
+        //     return NextResponse.json({ message: "Unauthorized. Admin access required." }, { status: 403 });
+        // }
 
         const users = await prisma.users.findMany({
             include: {

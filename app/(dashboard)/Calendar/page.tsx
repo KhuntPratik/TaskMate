@@ -97,6 +97,7 @@ export default function CalendarPage() {
     };
 
     const handleDayClick = (dateStr: string) => {
+        if (user?.roleid !== 1) return;
         setIsEditing(false);
         setEditingTaskId(null);
         setSelectedDate(dateStr);

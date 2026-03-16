@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { signToken } from "../../../../lib/jwt";
 
 export async function POST(req: Request) {
+  const dbUrl = process.env.DATABASE_URL || "NOT SET";
+  console.log("Current DATABASE_URL (masked):", dbUrl.replace(/:[^@]+@/, ":****@"));
   try {
     const { email, password } = await req.json();
 
@@ -35,7 +37,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const userRole = user.roles ? user.roles.rolename : "User";
+    // const userRole = user.roles ? user.roles.rolename : "User";
+
+    const userRole = user.roles?.rolename || "User";
 
     const token = signToken({
       userid: user.userid,

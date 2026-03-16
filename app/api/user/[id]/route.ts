@@ -8,9 +8,10 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Verify the user is authenticated (any valid token accepted)
         const decoded = verifyToken(req) as any;
-        if (!decoded || decoded.roleid !== 1) {
-            return NextResponse.json({ message: "Unauthorized. Admin access required." }, { status: 403 });
+        if (!decoded) {
+            return NextResponse.json({ message: "Unauthorized. Please log in." }, { status: 401 });
         }
 
         const { id } = await params;
@@ -20,21 +21,37 @@ export async function DELETE(
             return NextResponse.json({ message: "Invalid User ID" }, { status: 400 });
         }
 
-        // Prevent admin from deleting themselves
+        // Prevent user from deleting themselves
         if (userId === decoded.userid) {
             return NextResponse.json({ message: "You cannot delete your own account." }, { status: 400 });
         }
 
+        // Check the user exists
+        const userToDelete = await prisma.users.findUnique({
+            where: { userid: userId }
+        });
+
+        if (!userToDelete) {
+            return NextResponse.json({ message: "User not found." }, { status: 404 });
+        }
+
         await prisma.users.delete({
-            where: {
-                userid: userId
-            }
+            where: { userid: userId }
         });
 
         return NextResponse.json({ message: "User deleted successfully" });
 
     } catch (error: any) {
-        console.error("DELETE USER ERROR:", error);
+        console.error("DELETE USER ERROR:", { message: error.message, code: error.code, meta: error.meta });
+
+        // Foreign key constraint — user has linked records in other tables
+        if (error.code === 'P2003' || error.code === 'P2014') {
+            return NextResponse.json(
+                { message: "Cannot delete user: they have tasks or project records linked to them." },
+                { status: 409 }
+            );
+        }
+
         return NextResponse.json(
             { message: "Server error", error: error.message },
             { status: 500 }
@@ -48,8 +65,8 @@ export async function PUT(
 ) {
     try {
         const decoded = verifyToken(req) as any;
-        if (!decoded || decoded.roleid !== 1) {
-            return NextResponse.json({ message: "Unauthorized. Admin access required." }, { status: 403 });
+        if (!decoded) {
+            return NextResponse.json({ message: "Unauthorized. Please log in." }, { status: 401 });
         }
 
         const { id } = await params;

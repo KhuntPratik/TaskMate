@@ -44,7 +44,7 @@ export async function POST(req: Request) {
                 username,
                 email,
                 passwordhash,
-                roleid: 1,
+                roleid: 2,
             },
         });
 
@@ -63,9 +63,14 @@ export async function POST(req: Request) {
             { status: 201 }
         );
     } catch (error: any) {
-        console.error("REGISTER ERROR:", error);
+        console.error("REGISTER ERROR DETAILS:", {
+          message: error.message,
+          stack: error.stack,
+          code: error.code, // Prisma error code
+          meta: error.meta  // Prisma error meta
+        });
         return NextResponse.json(
-            { message: "Server error", error: error.message },
+            { message: "Server error", error: error.message, details: error.code },
             { status: 500 }
         );
     }
