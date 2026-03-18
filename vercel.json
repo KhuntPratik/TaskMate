@@ -1,0 +1,14 @@
+{
+  "env": {
+    "NEXTAUTH_URL": "https://your-vercel-app-url.vercel.app"
+  },
+  "build": {
+    "env": {
+      "DATABASE_URL": "@database_url",
+      "JWT_SECRET": "@jwt_secret",
+      "NEXTAUTH_SECRET": "@nextauth_secret",
+      "GOOGLE_CLIENT_ID": "@google_client_id",
+      "GOOGLE_CLIENT_SECRET": "@google_client_secret"
+    }
+  }
+}
