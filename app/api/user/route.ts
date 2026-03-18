@@ -18,7 +18,7 @@ export async function GET(req: Request) {
             }
         });
 
-        const safeUsers = users.map(user => {
+        const safeUsers = users.map((user: any) => {
             const { passwordhash, ...rest } = user;
             return rest;
         });
