@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { signOut, useSession } from "next-auth/react";
 
 type AuthUser = {
   token?: string;
@@ -37,7 +36,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     return token ? { token } : null;
   });
-  const { data: session, status } = useSession();
 
   const login = async (email: string, password: string) => {
     const res = await fetch("/api/auth/login", {
@@ -91,19 +89,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    await signOut({ redirect: false });
   };
 
-  const nextAuthUser: AuthUser = session?.user
-    ? {
-      name: session.user.name,
-      email: session.user.email ?? undefined,
-    }
-    : null;
-  const mergedUser = user ?? nextAuthUser;
-  const isLoading = status === "loading";
-
-  if (isLoading) return null;
+  const mergedUser = user;
+  const isLoading = false;
 
   return (
     <AuthContext.Provider
