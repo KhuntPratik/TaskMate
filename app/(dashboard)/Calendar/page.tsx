@@ -4,6 +4,7 @@ import styles from './calender.module.css';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useAuth } from '../../context/AuthContext';
+import { useSession } from 'next-auth/react';
 
 interface Event {
     id: number;
@@ -17,6 +18,7 @@ interface Event {
 export default function CalendarPage() {
     const router = useRouter();
     const { user } = useAuth();
+    const { data: session } = useSession();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [events, setEvents] = useState<Event[]>([]);
     const [taskLists, setTaskLists] = useState<any[]>([]);
@@ -156,6 +158,19 @@ export default function CalendarPage() {
             });
 
             if (res.ok) {
+                if (session?.accessToken) {
+                    await fetch("/api/google-calendar", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            accessToken: session.accessToken,
+                            title,
+                            description,
+                            date: selectedDate,
+                            timeZone: "Asia/Kolkata"
+                        })
+                    });
+                }
                 setIsModalOpen(false);
                 fetchTasks();
             } else {

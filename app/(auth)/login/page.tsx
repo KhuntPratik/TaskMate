@@ -15,6 +15,8 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const { googleLogin } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -33,6 +35,15 @@ export default function LoginPage() {
       <div className={styles.card}>
         {/* Logo */}
        
+
+ <button onClick={() => login("test@gmail.com", "123456")}>
+        Normal Login
+      </button>
+
+      <button onClick={googleLogin}>
+        Login with Google
+      </button>
+
 
         {/* Header */}
         <div className={styles.cardHeader}>
