@@ -175,14 +175,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  // Google user from NextAuth session
-  const googleUser: AuthUser =
-    session?.user
-      ? {
-          name: session.user.name,
-          email: session.user.email,
-        }
-      : null;
+  // Exchange NextAuth Google session for backend JWT (required for API calls)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!session?.user?.email) return;
+
+    const existingToken = window.localStorage.getItem("token");
+    if (existingToken) return;
+
+    const syncGoogleAuth = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch("/api/auth/google", { method: "POST" });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const userData = {
+          userid: data.user?.userid,
+          email: data.user?.email,
+          role: data.user?.role,
+          roleid: data.user?.roleid,
+        };
+
+        window.localStorage.setItem("token", data.token);
+        window.localStorage.setItem("user", JSON.stringify(userData));
+        setUser({ ...userData, token: data.token });
+      } catch (err) {
+        console.error("Google auth sync error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    syncGoogleAuth();
+  }, [session?.user?.email]);
 
   // ================= LOGIN =================
   const login = async (email: string, password: string) => {
@@ -263,18 +289,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await signOut({ callbackUrl: "/login" });
   };
 
-  // Merge local user with Google user
-  const mergedUser = user || googleUser;
-
   return (
     <AuthContext.Provider
       value={{
-        user: mergedUser,
+        user,
         login,
         register,
         logout,
         googleLogin,
-        isAuthenticated: !!mergedUser,
+        isAuthenticated: !!user,
         isLoading: isLoading || status === "loading",
       }}
     >

@@ -4,7 +4,6 @@ import styles from './calender.module.css';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useAuth } from '../../context/AuthContext';
-import { useSession } from 'next-auth/react';
 
 interface Event {
     id: number;
@@ -18,7 +17,6 @@ interface Event {
 export default function CalendarPage() {
     const router = useRouter();
     const { user } = useAuth();
-    const { data: session } = useSession();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [events, setEvents] = useState<Event[]>([]);
     const [taskLists, setTaskLists] = useState<any[]>([]);
@@ -34,11 +32,15 @@ export default function CalendarPage() {
     const [priority, setPriority] = useState<'Low' | 'Medium' | 'High'>('Medium');
     const [listId, setListId] = useState<number | ''>('');
 
+    const getAuthHeader = () => {
+        const token = user?.token || localStorage.getItem('token');
+        return token ? { 'Authorization': `Bearer ${token}` } : {};
+    };
+
     const fetchTasks = async () => {
         try {
-            const token = user?.token || localStorage.getItem('token');
             const res = await fetch("/api/task", {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: getAuthHeader()
             });
             const data = await res.json();
 
@@ -59,9 +61,8 @@ export default function CalendarPage() {
 
     const fetchTaskLists = async () => {
         try {
-            const token = user?.token || localStorage.getItem('token');
             const res = await fetch("/api/tasklist", {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: getAuthHeader()
             });
             const data = await res.json();
             if (Array.isArray(data)) {
@@ -113,7 +114,9 @@ export default function CalendarPage() {
     const handleEventClick = async (e: React.MouseEvent, eventId: number) => {
         e.stopPropagation();
         try {
-            const res = await fetch(`/api/task/${eventId}`);
+            const res = await fetch(`/api/task/${eventId}`, {
+                headers: getAuthHeader()
+            });
             const task = await res.json();
             if (res.ok) {
                 setIsEditing(true);
@@ -153,24 +156,11 @@ export default function CalendarPage() {
 
             const res = await fetch(url, {
                 method,
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", ...getAuthHeader() },
                 body: JSON.stringify(taskData)
             });
 
             if (res.ok) {
-                if (session?.accessToken) {
-                    await fetch("/api/google-calendar", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            accessToken: session.accessToken,
-                            title,
-                            description,
-                            date: selectedDate,
-                            timeZone: "Asia/Kolkata"
-                        })
-                    });
-                }
                 setIsModalOpen(false);
                 fetchTasks();
             } else {
@@ -187,7 +177,8 @@ export default function CalendarPage() {
 
         try {
             const res = await fetch(`/api/task/${editingTaskId}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: getAuthHeader()
             });
 
             if (res.ok) {

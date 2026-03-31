@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Edit, Trash2 } from 'lucide-react';
 import styles from './mytask.module.css';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import { useAuth } from '../../context/AuthContext';
 
 export interface Task {
     id: number;
@@ -31,6 +32,12 @@ const COLUMNS = [
 export default function KanbanBoard({ tasks, setTasks }: KanbanBoardProps) {
     const router = useRouter();
     const [enabled, setEnabled] = useState(false);
+    const { user } = useAuth();
+
+    const getAuthHeader = () => {
+        const token = user?.token || localStorage.getItem('token');
+        return token ? { 'Authorization': `Bearer ${token}` } : {};
+    };
 
     useEffect(() => {
         const animation = requestAnimationFrame(() => setEnabled(true));
@@ -74,7 +81,7 @@ export default function KanbanBoard({ tasks, setTasks }: KanbanBoardProps) {
 
             fetch(`/api/task/${draggableId}/status`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
                 body: JSON.stringify({ status: dbStatus })
             }).catch(err => {
                 console.error("Failed to update task status:", err);
@@ -91,11 +98,16 @@ export default function KanbanBoard({ tasks, setTasks }: KanbanBoardProps) {
 
     const handleDelete = async (e: React.MouseEvent, taskId: number) => {
         e.stopPropagation();
+        if (user?.roleid !== 1) {
+            alert("Only admins can delete tasks.");
+            return;
+        }
         if (!confirm("Are you sure you want to delete this task?")) return;
 
         try {
             const res = await fetch(`/api/task/${taskId}`, {
                 method: 'DELETE',
+                headers: getAuthHeader(),
             });
 
             if (!res.ok) throw new Error("Failed to delete task");
@@ -168,14 +180,16 @@ export default function KanbanBoard({ tasks, setTasks }: KanbanBoardProps) {
                                                                     >
                                                                         <Edit size={15} />
                                                                     </button>
-                                                                    <button
-                                                                        className={styles.deleteBtn}
-                                                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(239, 68, 68, 0.7)', padding: 0 }}
-                                                                        onClick={(e) => handleDelete(e, task.id)}
-                                                                        title="Delete"
-                                                                    >
-                                                                        <Trash2 size={15} />
-                                                                    </button>
+                                                                    {user?.roleid === 1 && (
+                                                                        <button
+                                                                            className={styles.deleteBtn}
+                                                                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(239, 68, 68, 0.7)', padding: 0 }}
+                                                                            onClick={(e) => handleDelete(e, task.id)}
+                                                                            title="Delete"
+                                                                        >
+                                                                            <Trash2 size={15} />
+                                                                        </button>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                             <div className={styles.cardFooter}>

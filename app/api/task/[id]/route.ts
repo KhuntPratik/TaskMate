@@ -25,8 +25,8 @@ export async function DELETE(
             return NextResponse.json({ message: "Task not found" }, { status: 404 });
         }
 
-        // Only Admin or Assigned User can delete
-        if (decoded.roleid !== 1 && existingTask.assignedto !== decoded.userid) {
+        // Only Admin can delete
+        if (decoded.roleid !== 1) {
             return NextResponse.json({ message: "Forbidden" }, { status: 403 });
         }
 

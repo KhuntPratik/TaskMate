@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+
 /* =========================================================
-   LOGIN PAGE — Clean White Minimal Design
+   LOGIN PAGE - Clean White Minimal Design
    ========================================================= */
 
 .page {
@@ -9,7 +11,7 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
   position: relative;
 }
 
@@ -269,6 +271,30 @@
 
 .eyeBtn:hover {
   color: #6b7280;
+}
+
+/* --- Options row ---------------------------------------- */
+.optionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -0.25rem;
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #4f46e5;
 }
 
 /* --- Submit button -------------------------------------- */

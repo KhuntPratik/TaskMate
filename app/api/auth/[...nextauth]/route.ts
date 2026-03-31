@@ -9,12 +9,6 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope:
-            "openid email profile https://www.googleapis.com/auth/calendar",
-        },
-      },
     }),
   ],
 
@@ -60,18 +54,6 @@ export const authOptions: NextAuthOptions = {
       });
 
       return true;
-    },
-    // Store Google access token in JWT
-    async jwt({ token, account }) {
-      if (account?.access_token) {
-        token.accessToken = account.access_token;
-      }
-      return token;
-    },
-
-    async session({ session, token }) {
-            session.accessToken = token.accessToken as string | undefined;
-      return session;
     },
   },
 
