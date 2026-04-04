@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../[...nextauth]/route";
+import { authOptions } from "../[...nextauth]/authOptions";
 import { prisma } from "../../../../lib/prisma";
 import { signToken } from "../../../../lib/jwt";
 import bcrypt from "bcryptjs";
