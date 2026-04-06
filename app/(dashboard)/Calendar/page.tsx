@@ -28,7 +28,7 @@ export default function CalendarPage() {
   // ✅ BACKEND SYNC (NO DIRECT GOOGLE CALL)
   const syncToGoogleCalendar = async (tasks: Event[]) => {
     try {
-      const res = await fetch("/api/google-sync", {
+      const res = await fetch("/api/google-calendar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
