@@ -1,110 +1,362 @@
+/* =========================================================
+   ADD TASK PAGE — Clean Professional Design
+   ========================================================= */
+
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    width: 100%;
-    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--background);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .header {
-    margin-bottom: 2rem;
-    text-align: center;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.headerContent {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.backButton {
+    background: var(--surface-hover);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border-radius: 12px;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.backButton:hover {
+    background: var(--surface-active);
+    color: var(--foreground);
+    transform: translateX(-2px);
 }
 
 .header h1 {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #818cf8 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--foreground);
+    margin: 0;
+    letter-spacing: -0.5px;
 }
 
 .header p {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 1.1rem;
+    color: var(--muted-foreground);
+    font-size: 1rem;
+    margin: 0.25rem 0 0 0;
 }
 
-.formCard {
-    padding: 2.5rem;
+.formContainer {
+    flex: 1;
+    padding: 2rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.form {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.section {
+    padding: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.sectionHeader {
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.sectionHeader h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.sectionHeader svg {
+    color: var(--primary);
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .formGroup {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .label {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.95rem;
-    font-weight: 500;
-    margin-left: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 0.25rem;
 }
 
-.row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+.label svg {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.input,
+.select,
+.textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--foreground);
+    transition: all 0.2s;
+    outline: none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--ring);
+}
+
+.inputError,
+.selectError,
+.textareaError {
+    border-color: var(--danger);
+}
+
+.inputError:focus,
+.selectError:focus,
+.textareaError:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
 }
 
 .select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
+    background-position: right 1rem center;
     background-repeat: no-repeat;
     background-size: 1.5em 1.5em;
-    padding-right: 2.5rem;
+    padding-right: 3rem;
+    cursor: pointer;
 }
 
-.textarea {
-    min-height: 120px;
-    resize: vertical;
+.errorText {
+    color: var(--danger);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.message {
+    margin: 1.5rem 2rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.messageSuccess {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.messageError {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .actions {
+    padding: 2rem;
+    background: var(--surface-hover);
+    border-top: 1px solid var(--border-color);
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
     justify-content: flex-end;
 }
 
 .cancelButton {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
-    padding: 0.8rem 1.5rem;
+    border: 2px solid var(--border-color);
+    color: var(--muted-foreground);
+    padding: 0.875rem 1.5rem;
     border-radius: 12px;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .cancelButton:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
+    background: var(--surface-active);
+    border-color: var(--muted-foreground);
+    color: var(--foreground);
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.submitButton {
+    background: var(--primary);
+    border: 2px solid var(--primary);
+    color: var(--primary-foreground);
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-primary);
 }
 
-@media (max-width: 640px) {
-    .row {
+.submitButton:hover:not(:disabled) {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.25);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Access Denied Styles */
+.accessDenied {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--background);
+    padding: 2rem;
+}
+
+.accessDeniedCard {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    padding: 3rem;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.accessDeniedIcon {
+    color: var(--danger);
+    margin-bottom: 1rem;
+}
+
+.accessDeniedCard h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 1rem 0;
+}
+
+.accessDeniedCard p {
+    color: var(--muted-foreground);
+    font-size: 1rem;
+    margin: 0 0 2rem 0;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        padding: 1.5rem 1rem;
+    }
+
+    .headerContent {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header h1 {
+        font-size: 1.875rem;
+    }
+
+    .formContainer {
+        padding: 1rem;
+    }
+
+    .section {
+        padding: 1.5rem 1rem;
+    }
+
+    .formGrid {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
-    
-    .formCard {
-        padding: 1.5rem;
+
+    .actions {
+        padding: 1.5rem 1rem;
+        flex-direction: column;
+    }
+
+    .cancelButton,
+    .submitButton {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 1rem;
+    }
+
+    .section {
+        padding: 1rem;
+    }
+
+    .accessDeniedCard {
+        padding: 2rem 1.5rem;
     }
 }

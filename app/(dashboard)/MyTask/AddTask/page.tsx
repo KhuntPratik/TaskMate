@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, Type, AlignLeft, Save, CheckSquare, AlertCircle, List, User } from "lucide-react";
+import { Calendar, Type, AlignLeft, Save, CheckSquare, AlertCircle, List, User, Plus, ArrowLeft } from "lucide-react";
 import styles from './addtask.module.css';
 import { useAuth } from "../../../context/AuthContext";
 
@@ -35,6 +35,7 @@ export default function AddTaskPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<Partial<TaskForm>>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,6 +70,19 @@ export default function AddTaskPage() {
     fetchData();
   }, [user, isAdmin]);
 
+  const validateForm = (): boolean => {
+    const newErrors: Partial<TaskForm> = {};
+
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.listid) newErrors.listid = "Please select a task list";
+    if (!formData.assignedto) newErrors.assignedto = "Please assign the task to someone";
+    if (!formData.duedate) newErrors.duedate = "Due date is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -77,10 +91,21 @@ export default function AddTaskPage() {
       ...prev,
       [name]: name === "listid" || name === "assignedto" ? (value === "" ? "" : Number(value)) : value
     }));
+
+    // Clear error when user starts typing
+    if (errors[name as keyof TaskForm]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      setMessage("Please fix the errors below");
+      return;
+    }
+
     setLoading(true);
     setMessage("");
 
@@ -105,7 +130,7 @@ export default function AddTaskPage() {
         throw new Error(data.message || "Failed to create task");
       }
 
-      setMessage("✅ Task created successfully!");
+      setMessage("Task created successfully!");
       setFormData({
         listid: "",
         assignedto: isAdmin ? "" : (user?.userid || ""),
@@ -128,131 +153,210 @@ export default function AddTaskPage() {
 
   if (!isAdmin) {
     return (
-      <div className={styles.container} style={{ textAlign: 'center', padding: '4rem' }}>
-        <h1 style={{ color: '#ef4444' }}>Access Denied</h1>
-        <p>You do not have permission to create tasks. Only admins can create and assign tasks.</p>
-        <button onClick={() => router.push('/MyTask')} style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer', background: '#e5e7eb', border: 'none', borderRadius: '4px' }}>Back to My Tasks</button>
+      <div className={styles.accessDenied}>
+        <div className={styles.accessDeniedCard}>
+          <AlertCircle size={48} className={styles.accessDeniedIcon} />
+          <h1>Access Denied</h1>
+          <p>You do not have permission to create tasks. Only admins can create and assign tasks.</p>
+          <button onClick={() => router.push('/MyTask')} className={styles.backButton}>
+            <ArrowLeft size={16} />
+            Back to My Tasks
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={styles.container}>
-      <h1>Create New Task</h1>
-      <form onSubmit={handleSubmit} className={styles.formCard}>
-
-        {/* IDs */}
-        <div className={styles.row}>
-          <div className={styles.formGroup}>
-            <label><List size={16} /> Select List</label>
-            <select
-              name="listid"
-              value={formData.listid}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select a list</option>
-              {taskLists.map(list => (
-                <option key={list.listid} value={list.listid}>{list.listname}</option>
-              ))}
-            </select>
-          </div>
-          <div className={styles.formGroup}>
-            <label><User size={16} /> Assigned To</label>
-            <select
-              name="assignedto"
-              value={formData.assignedto}
-              onChange={handleChange}
-              required
-              disabled={!isAdmin}
-            >
-              <option value="">Select a user</option>
-              {users.map(u => (
-                <option key={u.userid} value={u.userid}>{u.username}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Title */}
-        <div className={styles.formGroup}>
-          <label><Type size={16} /> Title</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div className={styles.formGroup}>
-          <label><AlignLeft size={16} /> Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={4}
-            required
-          />
-        </div>
-
-        {/* Due date & Priority */}
-        <div className={styles.row}>
-          <div className={styles.formGroup}>
-            <label><Calendar size={16} /> Due Date</label>
-            <input
-              type="date"
-              name="duedate"
-              value={formData.duedate}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label><AlertCircle size={16} /> Priority</label>
-            <select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-            >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Status */}
-        <div className={styles.formGroup}>
-          <label><CheckSquare size={16} /> Status</label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-          >
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-          </select>
-        </div>
-
-        {/* Message */}
-        {message && (
-          <div style={{ margin: "1rem 0", padding: "0.5rem", background: message.startsWith("Error") ? "#f87171" : "#34d399", color: "white", borderRadius: "4px" }}>
-            {message}
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className={styles.actions}>
-          <button type="button" onClick={() => router.back()}>Cancel</button>
-          <button type="submit" disabled={loading}>
-            {loading ? "Creating..." : <><Save size={16} /> Create Task</>}
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <button onClick={() => router.back()} className={styles.backButton}>
+            <ArrowLeft size={20} />
           </button>
+          <div>
+            <h1>Create New Task</h1>
+            <p>Fill in the details below to create a new task</p>
+          </div>
         </div>
+      </div>
 
-      </form>
+      <div className={styles.formContainer}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          {/* Task Details Section */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <Type size={20} />
+              <h2>Task Details</h2>
+            </div>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  <Type size={16} />
+                  Task Title *
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className={`${styles.input} ${errors.title ? styles.inputError : ''}`}
+                  placeholder="Enter task title"
+                />
+                {errors.title && <span className={styles.errorText}>{errors.title}</span>}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  <List size={16} />
+                  Task List *
+                </label>
+                <select
+                  name="listid"
+                  value={formData.listid}
+                  onChange={handleChange}
+                  className={`${styles.select} ${errors.listid ? styles.selectError : ''}`}
+                >
+                  <option value="">Select a task list</option>
+                  {taskLists.map(list => (
+                    <option key={list.listid} value={list.listid}>{list.listname}</option>
+                  ))}
+                </select>
+                {errors.listid && <span className={styles.errorText}>{errors.listid}</span>}
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>
+                <AlignLeft size={16} />
+                Description *
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className={`${styles.textarea} ${errors.description ? styles.textareaError : ''}`}
+                placeholder="Describe the task in detail"
+                rows={4}
+              />
+              {errors.description && <span className={styles.errorText}>{errors.description}</span>}
+            </div>
+          </div>
+
+          {/* Assignment & Timeline Section */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <User size={20} />
+              <h2>Assignment & Timeline</h2>
+            </div>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  <User size={16} />
+                  Assigned To *
+                </label>
+                <select
+                  name="assignedto"
+                  value={formData.assignedto}
+                  onChange={handleChange}
+                  className={`${styles.select} ${errors.assignedto ? styles.selectError : ''}`}
+                  disabled={!isAdmin}
+                >
+                  <option value="">Select a user</option>
+                  {users.map(u => (
+                    <option key={u.userid} value={u.userid}>{u.username}</option>
+                  ))}
+                </select>
+                {errors.assignedto && <span className={styles.errorText}>{errors.assignedto}</span>}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  <Calendar size={16} />
+                  Due Date *
+                </label>
+                <input
+                  type="date"
+                  name="duedate"
+                  value={formData.duedate}
+                  onChange={handleChange}
+                  className={`${styles.input} ${errors.duedate ? styles.inputError : ''}`}
+                />
+                {errors.duedate && <span className={styles.errorText}>{errors.duedate}</span>}
+              </div>
+            </div>
+          </div>
+
+          {/* Priority & Status Section */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <CheckSquare size={20} />
+              <h2>Priority & Status</h2>
+            </div>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  <AlertCircle size={16} />
+                  Priority
+                </label>
+                <select
+                  name="priority"
+                  value={formData.priority}
+                  onChange={handleChange}
+                  className={styles.select}
+                >
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  <CheckSquare size={16} />
+                  Status
+                </label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className={styles.select}
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Message */}
+          {message && (
+            <div className={`${styles.message} ${message.includes("Error") || message.includes("fix") ? styles.messageError : styles.messageSuccess}`}>
+              {message}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className={styles.actions}>
+            <button type="button" onClick={() => router.back()} className={styles.cancelButton}>
+              Cancel
+            </button>
+            <button type="submit" disabled={loading} className={styles.submitButton}>
+              {loading ? (
+                "Creating..."
+              ) : (
+                <>
+                  <Plus size={16} />
+                  Create Task
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
